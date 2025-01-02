@@ -17,8 +17,13 @@
   </properties>
 
   <dependencies>
+  		<dependency>
+    		<groupId>javax.mail</groupId>
+    		<artifactId>javax.mail-api</artifactId>
+    		<version>1.6.2</version>
+		</dependency>
   
-  <dependency>
+  		<dependency>
     		<groupId>commons-validator</groupId>
     		<artifactId>commons-validator</artifactId>
     		<version>1.7</version>
