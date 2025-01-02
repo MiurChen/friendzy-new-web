@@ -1,4 +1,4 @@
-package web.member;
+package web.member.controller;
 
 import java.io.IOException;
 
@@ -7,6 +7,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import com.google.gson.Gson;
 
@@ -15,9 +20,11 @@ import web.member.pojo.Member;
 import web.member.service.MemberService;
 import web.member.service.Impl.MemberServiceImpl;
 
+
 @WebServlet("/member/register")
 public class RegisterController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
