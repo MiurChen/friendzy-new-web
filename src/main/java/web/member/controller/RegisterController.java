@@ -20,12 +20,15 @@ import web.member.pojo.Member;
 import web.member.service.MemberService;
 import web.member.service.Impl.MemberServiceImpl;
 
-
-@WebServlet("/member/register")
+@Path("/member/register")
+@WebServlet("/rest/member/register")
 public class RegisterController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Gson gson = new Gson();
