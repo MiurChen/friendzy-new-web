@@ -51,17 +51,18 @@ public class MemberServiceImpl implements MemberService{
 	public String login(Member member) throws Exception {
 		String email = member.getEmail();
 		String password = member.getMpassword();
-		if(email == null || password == null) {
+		if(email == null || password == null 
+				|| email.isEmpty() || password.isEmpty()) {
 			return "欄位不可為空";
 		}
 		if (!EmailValidator.getInstance().isValid(email)) {
 			return "信箱格式錯誤";
 		}
-		if(memberDao.seleteBy(email) == null) {
+		Member existMember = memberDao.seleteBy(email);
+		if(existMember == null) {
 			return "該帳號尚未註冊";
 		}
-		if(memberDao.seleteBy(email).getEmail().equals(email) 
-				|| memberDao.seleteBy(password).getMpassword().equals(password)) {
+		if(existMember.getMpassword().equals(password)) {
 			return null;
 		}else {
 			return "登入失敗";
@@ -71,17 +72,19 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public String forget(Member member) throws Exception {
 		String email = member.getEmail();
-		if(email == null) {
+		if(email == null || email.isEmpty()) {
 			return "欄位不可為空";
 		}
 		if (!EmailValidator.getInstance().isValid(email)) {
 			return "信箱格式錯誤";
 		}
-		if(memberDao.seleteBy(email).getEmail().equals(email)) {
-			return null; //接API發mail接回去
-		}else {
+		Member existMember = memberDao.seleteBy(email);
+		if(existMember == null) {
 			return "無此用戶";
+		}else {
+			return null; //API接到信箱連接回來
 		}
+		
 	}
 
 }
