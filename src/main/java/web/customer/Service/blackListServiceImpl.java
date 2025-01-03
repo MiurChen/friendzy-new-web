@@ -18,5 +18,10 @@ public class blackListServiceImpl implements blackListservice{
 	public List<BlackList> showAllBlackList(BlackList blackList) throws Exception {
 		return blackListDao.seleteAll();
 	}
+	@Override
+	public BlackList insertByID(BlackList blackList) throws Exception {
+		
+		return null;
+	}
 
 }

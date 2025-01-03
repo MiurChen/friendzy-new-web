@@ -6,4 +6,6 @@ import web.customer.bean.BlackList;
 
 public interface blackListservice {
 	List<BlackList> showAllBlackList(BlackList blackList) throws Exception;
+	
+	BlackList insertByID(BlackList blackList)throws Exception;
 }
