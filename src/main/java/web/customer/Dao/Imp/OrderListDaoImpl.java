@@ -3,6 +3,7 @@ package web.customer.Dao.Imp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import javax.ws.rs.Path;
 
 import web.customer.Dao.OrderListDao;
 import web.customer.bean.OrderList;
+import web.customer.bean.Service;
 import web.member.pojo.Member;
 
 public class OrderListDaoImpl extends OrderListDao {
@@ -71,6 +73,7 @@ public class OrderListDaoImpl extends OrderListDao {
 					orderList.setOrder_price(rs.getDouble("order_price"));
 					orderList.setOrder_status(rs.getInt("order_status"));
 					orderList.setOrder_poster(rs.getInt("order_poster"));
+					orderList.setOrder_title(rs.getString("order_title"));
 					orderLists.add(orderList);
 				}
 				return orderLists;
@@ -83,18 +86,98 @@ public class OrderListDaoImpl extends OrderListDao {
 		return null;
 	}
 
-	@Override
-	public int insert(OrderList orderList) throws Exception {
-		String sql = "insert into order_list(order_id, order_perosn, order_price) values(?, ?, ?)";
-		try (Connection conn = ds.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
-			pstmt.setInt(1, orderList.getOrder_id());
-			pstmt.setInt(2, orderList.getOrder_person());
-			pstmt.setDouble(3, orderList.getOrder_price());
+//	@Override
+//	public int insertService(Service service) throws Exception {
+//		OrderList orderList = new OrderList();
+//		String insertOrderList = "insert into order_list(order_poster, order_price, order_title) values(?, ?, ?)";
+//		String insertPost = "insert into service(service_poster, sverice_charge, service, start_time, finished_time, service_status, poster_status) values(?, ?, ?, ?, ?, ?, ?)";
+//		try(Connection conn = ds.getConnection();){
+//			conn.setAutoCommit(false);
+//			try (
+//				PreparedStatement orderPstmt = conn.prepareStatement(insertOrderList, Statement.RETURN_GENERATED_KEYS);
+//				PreparedStatement postPstmt = conn.prepareStatement(insertPost, Statement.RETURN_GENERATED_KEYS);
+//				ResultSet rs = 	postPstmt.getGeneratedKeys();
+//					){
+//				postPstmt.setInt(1, service.getService_poster());
+//				postPstmt.setDouble(2, service.getSverice_charge());
+//				postPstmt.setString(3,service.getSverice());
+//				postPstmt.setTimestamp(4,service.getStart_time());
+//				postPstmt.setTimestamp(5, service.getFinished_time());
+//				postPstmt.setInt(6, service.getService_status());
+//				postPstmt.setInt(7, service.getPoster_status());
+//				postPstmt.executeUpdate();
+//				
+//				if (rs.next()) {
+//					int orderID = rs.getInt(1);
+//					orderList.setOrder_id(orderID);
+//					orderList.setOrder_price(orderList.getOrder_price());
+//					orderList.setOrder_title(orderList.getOrder_title());
+//					
+//					orderPstmt.setInt(1, orderList.getOrder_poster());
+//					orderPstmt.setDouble(2, orderList.getOrder_price());
+//					orderPstmt.setString(3, orderList.getOrder_title());
+//					orderPstmt.executeUpdate();
+//				}
+//				conn.commit();
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return -1;
+//	}
 
-			return pstmt.executeUpdate();
+//@Override
+	public int insertService(Service service) throws Exception {
+		String insertOrderList = "INSERT INTO order_list(order_poster, order_price, order_title) VALUES (?, ?, ?)";
+		String insertPost = "INSERT INTO service(service_poster, sverice_charge, service, start_time, finished_time,  poster_status) VALUES (?, ?, ?, ?, ?, ?)";
+
+		try (Connection conn = ds.getConnection()) {
+			conn.setAutoCommit(false); // 關閉自動提交，啟用交易
+
+			try (PreparedStatement postPstmt = conn.prepareStatement(insertPost, Statement.RETURN_GENERATED_KEYS);
+					PreparedStatement orderPstmt = conn.prepareStatement(insertOrderList)) {
+				// 插入 service 資料
+				postPstmt.setInt(1, service.getService_poster());
+				postPstmt.setDouble(2, service.getSverice_charge());
+				postPstmt.setString(3, service.getService());
+				postPstmt.setTimestamp(4, service.getStart_time());
+				postPstmt.setTimestamp(5, service.getFinished_time());
+				postPstmt.setInt(6, service.getPoster_status());
+				postPstmt.executeUpdate();
+
+				// 獲取 service 表自動生成的主鍵
+				try (ResultSet rs = postPstmt.getGeneratedKeys()) {
+					if (rs.next()) {
+						int orderId = rs.getInt(1); // 獲取主鍵
+
+						// 創建 order_list 資料
+						OrderList orderList = new OrderList();
+						orderList.setOrder_id(orderId);
+						orderList.setOrder_poster(service.getService_poster()); // 從 service 中獲取
+						orderList.setOrder_price(service.getSverice_charge()); // 金額等於服務收費
+						orderList.setOrder_title(service.getService()); // 自定義標題
+
+						// 插入 order_list 資料
+						orderPstmt.setInt(1, orderList.getOrder_poster());
+						orderPstmt.setDouble(2, orderList.getOrder_price());
+						orderPstmt.setString(3, orderList.getOrder_title());
+						orderPstmt.executeUpdate();
+					}
+				}
+
+				conn.commit(); // 提交交易
+				return 1; // 表示成功
+			} catch (Exception e) {
+				conn.rollback(); // 發生異常，回滾交易
+				e.printStackTrace();
+				throw e;
+			} finally {
+				conn.setAutoCommit(true); // 恢復自動提交模式
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		return -1;
+			throw e;
+		}	
 	}
+	
 }

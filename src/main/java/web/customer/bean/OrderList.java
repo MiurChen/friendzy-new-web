@@ -1,5 +1,7 @@
 package web.customer.bean;
 
+import java.sql.Timestamp;
+
 import lombok.Data;
 
 @Data
@@ -15,5 +17,6 @@ public class OrderList {
 	private Double  order_price;
 	private Integer order_status;
 	private Integer order_poster;
+	private String order_title;
 	
 }

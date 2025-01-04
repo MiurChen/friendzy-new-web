@@ -8,7 +8,7 @@ import lombok.Data;
 public class Service {
 	private Integer service_id;
 	private Integer service_poster;
-	private  String sverice;
+	private  String service;
 	private String servicr_detail;
 	private String service_pic;
 	private Timestamp start_time;
@@ -16,4 +16,5 @@ public class Service {
 	private Double sverice_charge;
 	private Integer service_status;
 	private String service_location;
+	private Integer poster_status;
 }

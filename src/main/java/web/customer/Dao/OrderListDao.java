@@ -10,6 +10,7 @@ import javax.naming.NamingException;
 
 import core.dao.dao;
 import web.customer.bean.OrderList;
+import web.customer.bean.Service;
 
 public class OrderListDao implements dao<OrderList>{
 	
@@ -46,6 +47,11 @@ public class OrderListDao implements dao<OrderList>{
 	public OrderList seleteBy(Integer order_id) throws Exception {
 		
 		return null;
+	}
+
+	public int insertService(Service service) throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 }
