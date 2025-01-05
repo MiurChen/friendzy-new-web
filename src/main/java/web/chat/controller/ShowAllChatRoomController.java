@@ -36,12 +36,14 @@ public class ShowAllChatRoomController {
 		HttpSession session = request.getSession(false);
 		
 		if (session == null) {
+			System.out.println("session is Missing");
 	        return Response.status(Response.Status.BAD_REQUEST)
 	                .entity("Session is missing.")
 	                .build();
 	    }
-		
+		System.out.println(session.getId());
 		Member member = (Member) session.getAttribute("member");
+		System.out.println(member.getEmail());
 		
 		if(member != null) {
 			try {
@@ -49,9 +51,11 @@ public class ShowAllChatRoomController {
 				String jsonResponse = new Gson().toJson(chatRooms);
 				return Response.ok(jsonResponse).build(); //返回200，帶入聊天室資料
 			} catch (Exception e) {
+				System.out.println(e.getMessage());
 				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while fetching chat rooms.").build();
 			}
 		}else {
+			System.out.println("User is not logged");
 			return Response.status(Response.Status.UNAUTHORIZED).entity("User is not logged in.").build();
 		}
 	}

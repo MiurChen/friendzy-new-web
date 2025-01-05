@@ -25,6 +25,7 @@ public class LoginController extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Gson gson = new Gson();
+		resp.setContentType("application/json;charset=UTF-8");
 		
 		Member member = gson.fromJson(req.getReader(), Member.class);
 		Result result = new Result(); //1.實例化一個Result物件
