@@ -6,9 +6,12 @@ import web.companion.pojo.ComOrder;
 
 public interface ComOrderListService{
 	
-		ComOrder shortOrder(ComOrder comOrder);
+		ComOrder shortMyOrder(Integer id) throws Exception;
+	
+		ComOrder shortOtherOrder(Integer id) throws Exception;
+
 		
-		List<ComOrder> shortAllOrder();
+		List<ComOrder> shortAllOrder() throws Exception;
 	
 	
 }
