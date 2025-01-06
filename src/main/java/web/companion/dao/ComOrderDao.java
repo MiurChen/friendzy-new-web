@@ -3,6 +3,7 @@ package web.companion.dao;
 import java.util.List;
 
 import core.dao.dao;
+import web.companion.pojo.ComApplicant;
 import web.companion.pojo.ComOrder;
 
 public class ComOrderDao implements dao<ComOrder> {
@@ -16,7 +17,7 @@ public class ComOrderDao implements dao<ComOrder> {
 	@Override
 	public int update(ComOrder item) throws Exception {
 
-		return 0;
+		return -1;
 	}
 
 	@Override
@@ -47,5 +48,9 @@ public class ComOrderDao implements dao<ComOrder> {
 		return null;
 	}
 	
+	public int cancelApplyUpdate(ComApplicant applicant) throws Exception{
+		
+		return -1;
+	}
 	
 }

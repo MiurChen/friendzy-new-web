@@ -30,4 +30,6 @@ public class ComOrder {//訂單
 	private String serviceNo;//服務地區-編號  SQL名字:area_no
 	private String areaCity;//服務地區-城市  SQL名字:area_city
 	private String areaDistricy;//服務地區-區  SQL名字:area_district
+	
+	
 }

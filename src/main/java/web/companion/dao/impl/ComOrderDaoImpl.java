@@ -3,6 +3,7 @@ package web.companion.dao.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import web.companion.dao.ComOrderDao;
+import web.companion.pojo.ComApplicant;
 import web.companion.pojo.ComOrder;
 import web.customer.bean.OrderList;
 
@@ -28,9 +30,19 @@ public class ComOrderDaoImpl extends ComOrderDao {
 	}
 
 	@Override
-	public int update(ComOrder item) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+	public int update(ComOrder item) throws SQLException {
+		String sql = "update order_list set order_status = ? where order_id = ?; ";
+			try (
+				Connection connection = ds.getConnection();
+				PreparedStatement ps = connection.prepareStatement(sql);
+			){
+				ps.setInt(1, item.getOrderStatus());
+				ps.setInt(2, item.getOrderId());
+				return ps.executeUpdate();
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			return -1;
 	}
 
 	@Override
@@ -206,5 +218,21 @@ public class ComOrderDaoImpl extends ComOrderDao {
 		return null;
 	}
 	
-	
+	@Override
+	public int cancelApplyUpdate(ComApplicant applicant) throws Exception{
+//		String sql = "update applicant set apply_status = 1 and"//此應徵的狀態 0:未應徵 1:已應徵
+//				+ " application_result  = 0 where service_id = ?; ";//應徵結果 0:未得標 1:已得標
+		String sql = "update applicant set apply_status = ? and"//此應徵的狀態 0:未應徵 1:已應徵
+				+ " application_result  = ? where service_id = ?; ";//應徵結果 0:未得標 1:已得標
+		try (
+				Connection connection = ds.getConnection();
+				PreparedStatement ps = connection.prepareStatement(sql);
+			){
+				ps.setInt(1, applicant.getServiceId());
+				return ps.executeUpdate();
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			return -1;
+	}
 }
