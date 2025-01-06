@@ -14,6 +14,12 @@ public abstract class ChatRoomDao implements dao<ChatRoom>{
 	@Override
 	public abstract ChatRoom seleteBy(String id) throws Exception;
 
-	@Override
-	public abstract List<ChatRoom> seleteAll() throws Exception;
+	public List<ChatRoom> selectRoomsByEmail(String id) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean doesChatRoomExist(Integer room_user_one, Integer room_user_two) throws Exception{
+		return false;
+	}
 }

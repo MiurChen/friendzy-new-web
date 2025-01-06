@@ -25,6 +25,7 @@ public class LoginController extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Gson gson = new Gson();
+		resp.setContentType("application/json;charset=UTF-8");
 		
 		Member member = gson.fromJson(req.getReader(), Member.class);
 		Result result = new Result(); //1.實例化一個Result物件
@@ -44,10 +45,11 @@ public class LoginController extends HttpServlet{
 					}
 					HttpSession session = req.getSession();
 					session.setAttribute("member", member); //把member放入session，容器是"member"
-//					resp.getWriter().write(gson.toJson(member));
+					resp.getWriter().write(gson.toJson(member));
 					
 					result.setStatu(true);
 					result.setMessage("登入成功");
+					result.setToken(session.getId());
 				} else {
 					result.setStatu(false);
 					result.setMessage("使用者名稱或密碼錯誤");
@@ -64,8 +66,9 @@ public class LoginController extends HttpServlet{
 				e.printStackTrace();
 			}
 		}
-		String json = gson.toJson(result);
-		resp.getWriter().write(json);
+//		String json = gson.toJson(result);
+//		resp.getWriter().write(json);
 	}
 
 }
+//test

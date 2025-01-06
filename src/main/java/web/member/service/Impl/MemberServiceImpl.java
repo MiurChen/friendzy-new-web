@@ -62,10 +62,29 @@ public class MemberServiceImpl implements MemberService{
 		if(existMember == null) {
 			return "該帳號尚未註冊";
 		}
-		if(existMember.getMpassword().equals(password)) {
-			return null;
-		}else {
-			return "登入失敗";
+//		if(existMember.getMpassword().equals(password)) {
+//			return null;
+//		}
+		// 驗證密碼
+	    if(existMember.getMpassword().equals(password)) {
+	        // 密碼正確，將完整會員資訊複製到傳入的member物件
+	        member.setMember_no(existMember.getMember_no());
+	        member.setMember_name(existMember.getMember_name());
+	        member.setMember_nick_name(existMember.getMember_nick_name());
+	        member.setMember_pic(existMember.getMember_pic());
+	        member.setPhone(existMember.getPhone());
+	        member.setIntroduction(existMember.getIntroduction());
+	        member.setCompanion_comment(existMember.getCompanion_comment());
+	        member.setCompanion_score(existMember.getCompanion_score());
+	        member.setCustmer_comment(existMember.getCustmer_comment());
+	        member.setCustmer_score(existMember.getCustmer_score());
+	        member.setRegistration_time(existMember.getRegistration_time());
+	        member.setMember_status(existMember.getMember_status());
+	        member.setMember_token(existMember.getMember_token());
+	        
+	        return null; 
+	    }else {
+	    	return "登入失敗";
 		}
 	}
 
