@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,7 +130,7 @@ public class OrderListDaoImpl extends OrderListDao {
 //@Override
 	public int insertService(Service service) throws Exception {
 		String insertOrderList = "INSERT INTO order_list(order_poster, order_price, order_title) VALUES (?, ?, ?)";
-		String insertPost = "INSERT INTO service(service_poster, sverice_charge, service, start_time, finished_time,  poster_status) VALUES (?, ?, ?, ?, ?, ?)";
+		String insertPost = "INSERT INTO service(service_poster, sverice_charge, service, servicr_detail, start_time, finished_time,  poster_status) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
 		try (Connection conn = ds.getConnection()) {
 			conn.setAutoCommit(false); // 關閉自動提交，啟用交易
@@ -137,12 +138,21 @@ public class OrderListDaoImpl extends OrderListDao {
 			try (PreparedStatement postPstmt = conn.prepareStatement(insertPost, Statement.RETURN_GENERATED_KEYS);
 					PreparedStatement orderPstmt = conn.prepareStatement(insertOrderList)) {
 				// 插入 service 資料
-				postPstmt.setInt(1, service.getService_poster());
-				postPstmt.setDouble(2, service.getSverice_charge());
-				postPstmt.setString(3, service.getService());
-				postPstmt.setTimestamp(4, service.getStart_time());
-				postPstmt.setTimestamp(5, service.getFinished_time());
-				postPstmt.setInt(6, service.getPoster_status());
+				  postPstmt.setInt(1, service.getService_poster());
+				    postPstmt.setDouble(2, service.getService_charge());
+				    postPstmt.setString(3, service.getService());
+				    postPstmt.setString(4, service.getService_detail());
+
+				    // 將 long 型態的時間戳轉換為 Timestamp
+				    Timestamp startTimestamp = new Timestamp(service.getStart_time());
+				    Timestamp finishTimestamp = new Timestamp(service.getFinished_time());
+
+				    // 設定 Timestamp 到 PreparedStatement
+				    postPstmt.setTimestamp(5, startTimestamp);
+				    postPstmt.setTimestamp(6, finishTimestamp);
+
+				    postPstmt.setInt(7, service.getPoster_status());
+
 				postPstmt.executeUpdate();
 
 				// 獲取 service 表自動生成的主鍵
@@ -154,7 +164,7 @@ public class OrderListDaoImpl extends OrderListDao {
 						OrderList orderList = new OrderList();
 						orderList.setOrder_id(orderId);
 						orderList.setOrder_poster(service.getService_poster()); // 從 service 中獲取
-						orderList.setOrder_price(service.getSverice_charge()); // 金額等於服務收費
+						orderList.setOrder_price(service.getService_charge()); // 金額等於服務收費
 						orderList.setOrder_title(service.getService()); // 自定義標題
 
 						// 插入 order_list 資料

@@ -23,5 +23,13 @@ public abstract class MemberDao implements dao<Member> {
 	@Override
 	public abstract List<Member> seleteAll() throws Exception;
 
+	public abstract int updatePassword(Member member);
+
+	public abstract int updateNickname(Member member);
+
+	public abstract int updatePhone(Member member);
+	
+	
+
 }
 

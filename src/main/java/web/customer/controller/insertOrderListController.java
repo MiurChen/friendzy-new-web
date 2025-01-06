@@ -26,6 +26,7 @@ public class insertOrderListController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Service newPost(Service service) throws Exception{
+		System.out.println("newPost");
 		return orderListService.addPost(service);
 	}
 }

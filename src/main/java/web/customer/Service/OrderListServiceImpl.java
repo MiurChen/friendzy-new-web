@@ -56,9 +56,11 @@ public class OrderListServiceImpl implements OrderListService {
 
 	@Override
 	public Service addPost(Service service) throws Exception {
-		if (service.getService() == null || service.getSverice_charge() == null || service.getPoster_status() == null
-				|| service.getService_poster() == null || service.getStart_time() == null
-				|| service.getFinished_time() == null ) {
+		if (service.getService() == null || service.getService_charge() == null || service.getPoster_status() == null
+				|| service.getService_poster() == null 
+				|| service.getStart_time() == null
+				|| service.getFinished_time() == null 
+				) {
 			return null;
 		}
 		Integer insertCount = orderlistdao.insertService(service);
