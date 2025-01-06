@@ -8,4 +8,12 @@ public interface MemberService {
 	String login(Member member) throws Exception;
 	
 	String forget(Member member) throws Exception;
+	
+	Member findByEmail(String email) throws Exception;
+	
+	String savePassword(Member member);
+	
+	String saveNickname(Member member);
+	
+	String savePhone(Member member);
 }
