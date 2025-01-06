@@ -2,6 +2,8 @@ package core.dao;
 
 import java.util.List;
 
+import web.customer.bean.Service;
+
 public interface dao<T> {
 
 	int insert(T item) throws Exception;
@@ -13,5 +15,7 @@ public interface dao<T> {
 	T seleteBy(String id) throws Exception;
 
 	List<T> seleteAll() throws Exception;
+
+	
 
 }
