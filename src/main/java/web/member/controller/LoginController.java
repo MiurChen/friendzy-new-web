@@ -45,10 +45,11 @@ public class LoginController extends HttpServlet{
 					}
 					HttpSession session = req.getSession();
 					session.setAttribute("member", member); //把member放入session，容器是"member"
-//					resp.getWriter().write(gson.toJson(member));
+					resp.getWriter().write(gson.toJson(member));
 					
 					result.setStatu(true);
 					result.setMessage("登入成功");
+					result.setToken(session.getId());
 				} else {
 					result.setStatu(false);
 					result.setMessage("使用者名稱或密碼錯誤");
@@ -65,8 +66,8 @@ public class LoginController extends HttpServlet{
 				e.printStackTrace();
 			}
 		}
-		String json = gson.toJson(result);
-		resp.getWriter().write(json);
+//		String json = gson.toJson(result);
+//		resp.getWriter().write(json);
 	}
 
 }

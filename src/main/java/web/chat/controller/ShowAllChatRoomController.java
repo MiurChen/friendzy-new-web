@@ -42,8 +42,11 @@ public class ShowAllChatRoomController {
 	                .build();
 	    }
 		System.out.println(session.getId());
+		System.out.println(session.getCreationTime());
 		Member member = (Member) session.getAttribute("member");
 		System.out.println(member.getEmail());
+		System.out.println(member.getMember_name());
+		System.out.println(member.getMember_no());
 		
 		if(member != null) {
 			try {

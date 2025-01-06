@@ -62,9 +62,9 @@ public class MemberServiceImpl implements MemberService{
 		if(existMember == null) {
 			return "該帳號尚未註冊";
 		}
-		if(existMember.getMpassword().equals(password)) {
-			return null;
-		}
+//		if(existMember.getMpassword().equals(password)) {
+//			return null;
+//		}
 		// 驗證密碼
 	    if(existMember.getMpassword().equals(password)) {
 	        // 密碼正確，將完整會員資訊複製到傳入的member物件
