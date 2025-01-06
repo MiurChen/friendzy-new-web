@@ -86,5 +86,51 @@ public class MemberServiceImpl implements MemberService{
 		}
 		
 	}
+ 
+	 @Override
+	    public Member findByEmail(String email) throws Exception {
+	        return memberDao.seleteBy(email); // 根據 email 查詢會員資料
+	    }
 
+	@Override
+	public String savePassword(Member member) {
+		String password = member.getMpassword();
+	    if (password == null || password.length() < 8) {
+	        return "密碼長度需大於8";
+	    }
+	    if (memberDao.updatePassword(member) > 0) {
+	        return null;
+	    } else {
+	        return "密碼更新失敗";
+	    }
+	}
+
+	@Override
+	public String saveNickname(Member member) {
+		String nickname = member.getMember_nick_name();
+	    if (nickname != null && nickname.length() > 20) {
+	        return "暱稱長度不得超過10個字元";
+	    }
+
+	    if (memberDao.updateNickname(member) > 0) {
+	        return null;
+	    } else {
+	        return "暱稱更新失敗";
+	    }
+	}
+
+	@Override
+	public String savePhone(Member member) {
+		String phone = member.getPhone();
+	    if (phone != null && phone.length() > 20) {
+	        return "電話長度不得超過20個字元";
+	    }
+
+	    if (memberDao.updatePhone(member) > 0) {
+	        return null;
+	    } else {
+	        return "電話更新失敗";
+	    }	
+	 }
+	
 }

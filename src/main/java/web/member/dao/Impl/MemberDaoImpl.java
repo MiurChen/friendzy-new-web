@@ -100,4 +100,54 @@ public class MemberDaoImpl extends MemberDao {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public int updatePassword(Member member) {
+		String sql = "UPDATE member_info SET mpassword = ? WHERE email = ?";
+		try (Connection conn = ds.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql)
+			){
+				pstmt.setString(1, member.getMpassword());
+				pstmt.setString(2, member.getEmail());
+				return pstmt.executeUpdate();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return -1;
+	}
+
+	@Override
+	public int updateNickname(Member member) {
+		String sql = "UPDATE member_info SET Member_nick_name = ? WHERE email = ?";
+		try (Connection conn = ds.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql)
+			){
+				pstmt.setString(1, member.getMember_nick_name());
+				pstmt.setString(2, member.getEmail());
+				return pstmt.executeUpdate();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return -1;
+	}
+
+	@Override
+	public int updatePhone(Member member) {
+		String sql = "UPDATE member_info SET Phone = ? WHERE email = ?";
+		try (Connection conn = ds.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql)
+			){
+				pstmt.setString(1, member.getPhone());
+				pstmt.setString(2, member.getEmail());
+				return pstmt.executeUpdate();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return -1;
+	}
+
+	
 }
