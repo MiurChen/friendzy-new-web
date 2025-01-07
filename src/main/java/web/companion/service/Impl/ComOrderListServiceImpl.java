@@ -3,8 +3,11 @@ package web.companion.service.Impl;
 import java.util.List;
 
 import javax.naming.NamingException;
+import javax.ws.rs.PathParam;
 
+import web.companion.dao.ComApplicantDao;
 import web.companion.dao.ComOrderDao;
+import web.companion.dao.impl.ComApplicantDaoImpl;
 import web.companion.dao.impl.ComOrderDaoImpl;
 import web.companion.pojo.ComApplicant;
 import web.companion.pojo.ComOrder;
@@ -12,39 +15,44 @@ import web.companion.service.ComOrderListService;
 
 public class ComOrderListServiceImpl implements ComOrderListService{
 	private ComOrderDao comOrderDao;
+	private ComApplicantDao comApplicantDao;
 	
 	public ComOrderListServiceImpl() throws NamingException {
 		comOrderDao = new ComOrderDaoImpl();
+		comApplicantDao = new ComApplicantDaoImpl();
 	}
+	
 	//取得所有訂單的基本資訊
 	@Override
-	public List<ComOrder> shortAllOrder() throws Exception {
-		return comOrderDao.seleteAll();
+	public List<ComOrder> shortAllOrder(Integer meberNo) throws Exception {
+		return comOrderDao.shortAllOrder(meberNo);
 	}
-	//取得特定ID的訂單詳細資訊，我為刊登者
+	
+	//取得特定ID的訂單詳細資訊
 	@Override
-	public ComOrder shortMyOrder(Integer id) throws Exception {
-		return comOrderDao.selectPosterMeBy(id);
+	public ComOrder shortMyOrder(Integer meberNo , Integer person , Integer orderId) throws Exception {
+		if (person != meberNo) {//我為刊登者
+			return comOrderDao.selectPosterMeBy(orderId);
+		}else {//對方為刊登者
+			return comOrderDao.selectPosterOtherBy(orderId);
+		}
 	}
-	//取得特定ID的訂單詳細資訊，對方為刊登者
-	@Override
-	public ComOrder shortOtherOrder(Integer id) throws Exception {
-		return comOrderDao.selectPosterOtherBy(id);
-	}
+	
 	//更新訂單狀態
 	@Override
-	public ComOrder update(ComOrder orderSt) throws Exception {
+	public ComOrder statusUpdate(ComOrder orderSt) throws Exception {
 		if (comOrderDao.update(orderSt) > 0) {
 			return orderSt;
 		}else {
 			return null;
 		}
 	}
-	//取消訂單更新應徵者的應徵狀態、應徵結果
+	
+	//取消訂單 更新應徵者的應徵狀態
 	@Override
-	public String cancelApply(ComApplicant applicant) throws Exception {
-		if (comOrderDao.cancelApplyUpdate(applicant) > 0) {
-			return applicant.toString();
+	public String cancelApply(Integer serviceId) throws Exception {
+		if (comApplicantDao.applyStatusUpdate(serviceId) > 0) {
+			return serviceId.toString();
 //			return "更改成功："+serviceId.toString()+"比資料受影響";
 		}else {
 			return null;			

@@ -1,5 +1,6 @@
 package web.companion.dao;
 
+import java.rmi.server.ExportException;
 import java.util.List;
 
 import core.dao.dao;
@@ -38,6 +39,14 @@ public class ComOrderDao implements dao<ComOrder> {
 		return null;
 	}
 	
+	
+	
+	//新加的↓
+	public List<ComOrder> shortAllOrder(Integer meberNo) throws Exception {
+
+		return null;
+	}
+	
 	public ComOrder selectPosterMeBy(Integer id) throws Exception{
 		
 		return null;
@@ -47,10 +56,6 @@ public class ComOrderDao implements dao<ComOrder> {
 		
 		return null;
 	}
-	
-	public int cancelApplyUpdate(ComApplicant applicant) throws Exception{
-		
-		return -1;
-	}
-	
+
+
 }

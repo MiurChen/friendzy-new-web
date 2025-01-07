@@ -30,39 +30,39 @@ public class ComOrderController{
 	}
 	//取得所有訂單的基本資訊
 	@GET
-	@Path("/showAll")
+	@Path("/showAll/{memberNo}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ComOrder> showList() throws Exception{
+	public List<ComOrder> showList(@PathParam("memberNo") Integer meberNo) throws Exception{
 //		return comOrderDao.seleteAll();
-		return orderListService.shortAllOrder();
+		return orderListService.shortAllOrder(meberNo);
 	}
 	//取得特定ID的訂單詳細資訊
 	// FIXME 之後再再補上自己的會員編號
 	@GET
-	@Path("/showId/{orderId}")
+	@Path("/showId/{memberNo}/{servicePperson}/{orderId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ComOrder showOrder(@PathParam("orderId") Integer id) throws Exception {
+	public ComOrder showOrder(@PathParam("memberNo") Integer meberNo , @PathParam("servicePperson") Integer person , @PathParam("orderId") Integer orderId) throws Exception {
 //		return comOrderDao.selectPosterMeBy(id);
 //		return comOrderDao.selectPosterOtherBy(id);
-		return orderListService.shortMyOrder(id);
+		return orderListService.shortMyOrder(meberNo,person,orderId);
 //		return orderListService.shortOtherOrder(id);
 	}
 	//變更訂單狀態
 	@PUT
-	@Path("/orderStatus/update")
+	@Path("/StatusUp")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ComOrder update(ComOrder comOrder)throws Exception{
-		return orderListService.update(comOrder);
+		return orderListService.statusUpdate(comOrder);
 	}
-	//取消訂單取消所有應徵者
+	//取消訂單 取消所有應徵者
 	//從服務ID service_id取得此項目並更改所有【應徵狀態】、【應徵結果】
 	@PUT
 	@Path("/cancelApply")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String cancelApply(ComApplicant applicant)throws Exception{
-		return orderListService.cancelApply(applicant);
+		return orderListService.cancelApply(applicant.getServiceId());
 //		return null;
 	} 
 	

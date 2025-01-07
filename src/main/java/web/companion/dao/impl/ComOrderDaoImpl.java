@@ -11,6 +11,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
 import web.companion.dao.ComOrderDao;
 import web.companion.pojo.ComApplicant;
 import web.companion.pojo.ComOrder;
@@ -59,19 +61,31 @@ public class ComOrderDaoImpl extends ComOrderDao {
 
 	@Override
 	public List<ComOrder> seleteAll() throws Exception {
+		return null;
+	}
+
+	//取所有自己
+	@Override
+	public List<ComOrder> shortAllOrder(Integer meberNo) throws Exception {
 		List<ComOrder> orderLists = new ArrayList<ComOrder>();
 		String sql = "select o.order_id as 'order_id',"
 				+ "s.service as'service',"
 				+ "o.order_person as 'order_person',"
-				+ "m.member_name as'Person_name',"
+				+ "m1.member_name as'Person_name',"
+				+ "o.order_poster as 'order_poster',"
+				+ "m2.member_name as'Person_name',"
 				+ "o.order_status as 'order_status',"
 				+ "s.service_status as'service_status',"
 				+ "s.start_time as'start_time'"
-				+ "from order_list o join service s join member_info m on s.service_id = o.order_id and o.order_person = m.member_no;";
+				+ " from order_list o join service s join member_info m1 join member_info m2"
+				+ " on s.service_id = o.service_idno and o.order_person = m1.member_no and o.order_poster = m2.member_no"
+				+ " where m1.member_no = ? or m2.member_no = ?;";
 		try (
 			Connection conn = ds.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(sql)
 		) {
+			pstmt.setInt(1, meberNo);
+			pstmt.setInt(2, meberNo);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {
 					ComOrder orderList = new ComOrder();
@@ -90,10 +104,9 @@ public class ComOrderDaoImpl extends ComOrderDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return null;
 	}
-
+	
 	@Override
 	public ComOrder selectPosterMeBy(Integer id) throws Exception {
 		String sql = "select o.order_id as 'order_id',"
@@ -218,21 +231,5 @@ public class ComOrderDaoImpl extends ComOrderDao {
 		return null;
 	}
 	
-	@Override
-	public int cancelApplyUpdate(ComApplicant applicant) throws Exception{
-//		String sql = "update applicant set apply_status = 1 and"//此應徵的狀態 0:未應徵 1:已應徵
-//				+ " application_result  = 0 where service_id = ?; ";//應徵結果 0:未得標 1:已得標
-		String sql = "update applicant set apply_status = ? and"//此應徵的狀態 0:未應徵 1:已應徵
-				+ " application_result  = ? where service_id = ?; ";//應徵結果 0:未得標 1:已得標
-		try (
-				Connection connection = ds.getConnection();
-				PreparedStatement ps = connection.prepareStatement(sql);
-			){
-				ps.setInt(1, applicant.getServiceId());
-				return ps.executeUpdate();
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
-			return -1;
-	}
+
 }
