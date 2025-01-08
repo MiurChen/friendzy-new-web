@@ -96,7 +96,7 @@ public class OrderListDaoImpl extends OrderListDao {
 	@Override
 	public int insertService(Service service) throws Exception {
 		String insertOrderList = "INSERT INTO order_list(order_poster, order_price, order_title) VALUES (?, ?, ?)";
-		String insertPost = "INSERT INTO service(service_poster, sverice_charge, service, servicr_detail, start_time, finished_time,  poster_status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		String insertPost = "INSERT INTO service(service_poster, sverice_charge, service, servicr_detail, start_time, finished_time,  poster_status, service_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 		try (Connection conn = ds.getConnection()) {
 			conn.setAutoCommit(false); // 關閉自動提交，啟用交易
@@ -108,6 +108,7 @@ public class OrderListDaoImpl extends OrderListDao {
 				postPstmt.setDouble(2, service.getService_charge());
 				postPstmt.setString(3, service.getService());
 				postPstmt.setString(4, service.getService_detail());
+				
 
 				// 將 long 型態的時間戳轉換為 Timestamp
 				Timestamp startTimestamp = new Timestamp(service.getStart_time());
@@ -116,8 +117,8 @@ public class OrderListDaoImpl extends OrderListDao {
 				// 設定 Timestamp 到 PreparedStatement
 				postPstmt.setTimestamp(5, startTimestamp);
 				postPstmt.setTimestamp(6, finishTimestamp);
-
 				postPstmt.setInt(7, service.getPoster_status());
+				postPstmt.setInt(8, service.getService_status());
 
 				postPstmt.executeUpdate();
 
