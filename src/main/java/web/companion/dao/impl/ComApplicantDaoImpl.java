@@ -64,7 +64,7 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 				PreparedStatement ps = connection.prepareStatement(sql);
 			){
 				ps.setInt(1, applicant.getServiceId());
-				ps.setInt(2, applicant.getApplicant_account());
+				ps.setInt(2, applicant.getAccountId());
 
 				return ps.executeUpdate();
 			}catch (Exception e) {
@@ -89,4 +89,170 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 			}
 			return -1;
 	}
+	
+	@Override
+	public List<ComApplicant> showAllApplicant(Integer memberId)throws Exception{
+		List<ComApplicant> lists = new ArrayList<ComApplicant>();
+		String sql = "select o.order_id as 'order_id',"
+				+ "a.applicant_account as 'applicant_account',"
+				+ "m2.member_name as 'account_name',"
+				+ "a.apply_status as'apply_status',"
+				+ "a.applicant_account as'application_result',"
+				+ "s.service as'service',"
+				+ "s.start_time as'start_time'"
+				+ " from order_list o join service s join member_info m1"
+				+ " join member_info m2 join service_area sa join applicant"
+				+ " on s.service_id = o.service_idno and s.service_location = sa.area_no and s.service_id = a.service_id"
+				+ " and s.service_poster = m1.member_no and a.applicant_account = m2.member_no"
+				+ " where m1.member_no = ? or m2.member_no = ?;";
+		try (
+				Connection connection = ds.getConnection();
+				PreparedStatement ps = connection.prepareStatement(sql);
+			){
+				ps.setInt(1, memberId);
+				ps.setInt(2, memberId);
+				try (ResultSet rs = ps.executeQuery()){
+					while (rs.next()) {
+						ComApplicant list = new ComApplicant();
+						list.setOrderId(rs.getInt("order_id"));
+						list.setAccountId(rs.getInt("applicant_account"));
+						list.setAccountName(rs.getString("account_name"));
+						list.setApplyStatus(rs.getInt("apply_status"));
+						list.setApplicationResult(rs.getInt("application_result"));
+						list.setService(rs.getString("service"));
+						list.setStartTime(rs.getTimestamp("start_time"));
+						lists.add(list);
+					}
+					return lists;
+				}
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+	}
+	
+	//我為刊登者
+	@Override
+	public ComApplicant selectAccountMyById(Integer account ,Integer serviceId)throws Exception{
+		String sql = "select o.order_id as'order_id',"
+				+ "s.service_id as'service_id',"
+				+ "o.order_status as'order_status',"
+				+ "s.service_id as'theirId',"
+				+ "m1.member_name as'theirName',"
+				+ "m1.member_pic as'theirImg',"
+				+ "s.service_poster as'order_poster',"
+				+ "m1.member_name as'poster_name',"
+				+ "s.service as'service',"
+				+ "s.servicr_detail as'servicr_detail',"
+				+ "s.start_time as'start_time',"
+				+ "s.finished_time as'finished_time',"
+				+ "o.order_price as'order_price',"
+				+ "concat( sa.area_city,' ', sa.area_district) as'area',"
+				+ "a.applicant_account as'applicant_account',"
+				+ "m2.member_name as'account_name',"
+				+ "a.apply_status as'apply_status',"
+				+ "a.application_result as'application_result'"
+				+ " from service s join applicant a join service_area sa join member_info m1 join member_info m2 join order_list o"
+				+ " on s.service_id = a.service_id and s.service_location = sa.area_no and s.service_id = o.service_idno"
+				+ " and s.service_poster = m1.member_no and a.applicant_account = m2.member_no"
+				+ " where s.service_id = ? and a.applicant_account = ?;";
+		try (
+			Connection conn = ds.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql)
+		){
+			pstmt.setInt(1, serviceId);
+			pstmt.setInt(2, account);
+			try(ResultSet rs = pstmt.executeQuery()){
+				if (rs.next()) {
+					ComApplicant applicant = new ComApplicant();
+					applicant.setOrderId(rs.getInt("order_id"));
+					applicant.setServiceId(rs.getInt("service_id"));
+					applicant.setOrderStatus(rs.getInt("order_status"));
+					applicant.setTheirName(rs.getString("theirName"));
+					applicant.setTheirId(rs.getInt("theirId"));
+					applicant.setTheirImg(rs.getString("theirImg"));
+					applicant.setOrderPosterName(rs.getString("poster_name"));
+					applicant.setOrderPoster(rs.getInt("order_poster"));
+					applicant.setService(rs.getString("service"));
+					applicant.setServiceDatil(rs.getString("servicr_detail"));
+					applicant.setStartTime(rs.getTimestamp("start_time"));
+					applicant.setEndTime(rs.getTimestamp("finished_time"));
+					applicant.setOrderPrice(rs.getDouble("order_price"));
+					applicant.setArea(rs.getString("area"));
+					applicant.setAccountId(rs.getInt("applicant_account"));
+					applicant.setAccountName(rs.getString("account_name"));
+					applicant.setApplyStatus(rs.getInt("apply_status"));
+					applicant.setApplicationResult(rs.getInt("application_result"));
+					return applicant;
+				}
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	//對方為刊登者
+	@Override
+	public ComApplicant selectAccountOtherById(Integer account ,Integer serviceId)throws Exception{
+		String sql = "select o.order_id as'order_id',"
+				+ "s.service_id as'service_id',"
+				+ "o.order_status as'order_status',"
+				+ "a.applicant_account as'theirId',"
+				+ "m2.member_name as'theirName',"
+				+ "m2.member_pic as'theirImg',"
+				+ "s.service_poster as'order_poster',"
+				+ "m1.member_name as'poster_name',"
+				+ "s.service as'service',"
+				+ "s.servicr_detail as'servicr_detail',"
+				+ "s.start_time as'start_time',"
+				+ "s.finished_time as'finished_time',"
+				+ "o.order_price as'order_price',"
+				+ "concat( sa.area_city,' ', sa.area_district) as'area',"
+				+ "a.applicant_account as'applicant_account',"
+				+ "m2.member_name as'account_name',"
+				+ "a.apply_status as'apply_status',"
+				+ "a.application_result as'application_result'"
+				+ " from service s join applicant a join service_area sa join member_info m1 join member_info m2 join order_list o"
+				+ " on s.service_id = a.service_id and s.service_location = sa.area_no and s.service_id = o.service_idno"
+				+ " and s.service_poster = m1.member_no and a.applicant_account = m2.member_no"
+				+ " where s.service_id = ? and a.applicant_account = ?;";
+		try (
+			Connection conn = ds.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql)
+		){
+			pstmt.setInt(1, serviceId);
+			pstmt.setInt(2, account);
+			try(ResultSet rs = pstmt.executeQuery()){
+				if (rs.next()) {
+					ComApplicant applicant = new ComApplicant();
+					applicant.setOrderId(rs.getInt("order_id"));
+					applicant.setServiceId(rs.getInt("service_id"));
+					applicant.setOrderStatus(rs.getInt("order_status"));
+					applicant.setTheirName(rs.getString("theirName"));
+					applicant.setTheirId(rs.getInt("theirId"));
+					applicant.setTheirImg(rs.getString("theirImg"));
+					applicant.setOrderPosterName(rs.getString("poster_name"));
+					applicant.setOrderPoster(rs.getInt("order_poster"));
+					applicant.setService(rs.getString("service"));
+					applicant.setServiceDatil(rs.getString("servicr_detail"));
+					applicant.setStartTime(rs.getTimestamp("start_time"));
+					applicant.setEndTime(rs.getTimestamp("finished_time"));
+					applicant.setOrderPrice(rs.getDouble("order_price"));
+					applicant.setArea(rs.getString("area"));
+					applicant.setAccountId(rs.getInt("applicant_account"));
+					applicant.setAccountName(rs.getString("account_name"));
+					applicant.setApplyStatus(rs.getInt("apply_status"));
+					applicant.setApplicationResult(rs.getInt("application_result"));
+					return applicant;
+				}
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 }

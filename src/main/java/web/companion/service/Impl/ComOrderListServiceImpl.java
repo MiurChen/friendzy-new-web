@@ -24,13 +24,13 @@ public class ComOrderListServiceImpl implements ComOrderListService{
 	
 	//取得所有訂單的基本資訊
 	@Override
-	public List<ComOrder> shortAllOrder(Integer meberNo) throws Exception {
-		return comOrderDao.shortAllOrder(meberNo);
+	public List<ComOrder> showAllOrder(Integer meberNo) throws Exception {
+		return comOrderDao.showAllOrder(meberNo);
 	}
 	
 	//取得特定ID的訂單詳細資訊
 	@Override
-	public ComOrder shortMyOrder(Integer meberNo , Integer person , Integer orderId) throws Exception {
+	public ComOrder showMyOrder(Integer meberNo , Integer person , Integer orderId) throws Exception {
 		if (person != meberNo) {//我為刊登者
 			return comOrderDao.selectPosterMeBy(orderId);
 		}else {//對方為刊登者
@@ -58,6 +58,7 @@ public class ComOrderListServiceImpl implements ComOrderListService{
 			return null;			
 		}
 	}
-	
+	//取得所有應徵(我或別人)
+
 	
 }

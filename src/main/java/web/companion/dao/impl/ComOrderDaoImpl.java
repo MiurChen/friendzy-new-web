@@ -66,7 +66,7 @@ public class ComOrderDaoImpl extends ComOrderDao {
 
 	//取所有自己
 	@Override
-	public List<ComOrder> shortAllOrder(Integer meberNo) throws Exception {
+	public List<ComOrder> showAllOrder(Integer meberNo) throws Exception {
 		List<ComOrder> orderLists = new ArrayList<ComOrder>();
 		String sql = "select o.order_id as 'order_id',"
 				+ "s.service as'service',"
@@ -76,9 +76,12 @@ public class ComOrderDaoImpl extends ComOrderDao {
 				+ "m2.member_name as'Person_name',"
 				+ "o.order_status as 'order_status',"
 				+ "s.service_status as'service_status',"
-				+ "s.start_time as'start_time'"
-				+ " from order_list o join service s join member_info m1 join member_info m2"
-				+ " on s.service_id = o.service_idno and o.order_person = m1.member_no and o.order_poster = m2.member_no"
+				+ "s.start_time as'start_time',"
+				+ "sa.area_city as'area_city',"
+				+ "sa.area_district as'area_district'"
+				+ " from order_list o join service s join member_info m1 join member_info m2 join service_area sa"
+				+ " on s.service_id = o.service_idno and o.order_person = m1.member_no and"
+				+ " o.order_poster = m2.member_no and s.service_location = sa.area_no"
 				+ " where m1.member_no = ? or m2.member_no = ?;";
 		try (
 			Connection conn = ds.getConnection();
@@ -135,7 +138,8 @@ public class ComOrderDaoImpl extends ComOrderDao {
 				+ " where o.order_id = ?";
 		try (
 			Connection conn = ds.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql)){
+			PreparedStatement pstmt = conn.prepareStatement(sql)
+		){
 			pstmt.setInt(1, id);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
@@ -161,6 +165,7 @@ public class ComOrderDaoImpl extends ComOrderDao {
 					order.setComRateContent(rs.getString("companion_rate_content")); // 陪伴者評價
 					return order;
 				}
+				return null;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -197,7 +202,8 @@ public class ComOrderDaoImpl extends ComOrderDao {
 				+ " where o.order_id = ?";
 		try (
 			Connection conn = ds.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement(sql)){
+			PreparedStatement pstmt = conn.prepareStatement(sql)
+		){
 			pstmt.setInt(1, id);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
@@ -223,6 +229,7 @@ public class ComOrderDaoImpl extends ComOrderDao {
 					order.setComRateContent(rs.getString("companion_rate_content")); // 陪伴者評價
 					return order;
 				}
+				return null;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

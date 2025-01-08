@@ -34,17 +34,17 @@ public class ComOrderController{
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ComOrder> showList(@PathParam("memberNo") Integer meberNo) throws Exception{
 //		return comOrderDao.seleteAll();
-		return orderListService.shortAllOrder(meberNo);
+		return orderListService.showAllOrder(meberNo);
 	}
 	//取得特定ID的訂單詳細資訊
 	// FIXME 之後再再補上自己的會員編號
 	@GET
-	@Path("/showId/{memberNo}/{servicePperson}/{orderId}")
+	@Path("/showId/{memberNo}/{servicePerson}/{orderId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ComOrder showOrder(@PathParam("memberNo") Integer meberNo , @PathParam("servicePperson") Integer person , @PathParam("orderId") Integer orderId) throws Exception {
+	public ComOrder showOrder(@PathParam("memberNo") Integer meberNo , @PathParam("servicePerson") Integer person , @PathParam("orderId") Integer orderId) throws Exception {
 //		return comOrderDao.selectPosterMeBy(id);
 //		return comOrderDao.selectPosterOtherBy(id);
-		return orderListService.shortMyOrder(meberNo,person,orderId);
+		return orderListService.showMyOrder(meberNo,person,orderId);
 //		return orderListService.shortOtherOrder(id);
 	}
 	//變更訂單狀態

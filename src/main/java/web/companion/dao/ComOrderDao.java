@@ -42,7 +42,7 @@ public class ComOrderDao implements dao<ComOrder> {
 	
 	
 	//新加的↓
-	public List<ComOrder> shortAllOrder(Integer meberNo) throws Exception {
+	public List<ComOrder> showAllOrder(Integer meberNo) throws Exception {
 
 		return null;
 	}

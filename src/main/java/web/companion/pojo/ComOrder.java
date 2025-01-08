@@ -21,15 +21,13 @@ public class ComOrder {//訂單
 	private String serviceDatil;//刊登內容  SQL名字:servicr_detail
 	private Timestamp startTime;//開始時間  SQL名字:start_time
 	private Timestamp endTime;//結束時間  SQL名字:finished_time
-	private Double order_price;//金額  SQL名字:order_price
+	private Double orderPrice;//金額  SQL名字:order_price
 	private Integer orderStatus;//訂單狀態  SQL名字:order_status
 	private String cusRateContent;//顧客評論  SQL名字:customer_rate_content
 	private String comRateContent;//陪伴者評論  SQL名字:companion_rate_content
 	private String cusRate;//顧客評分  SQL名字:customer_rate
 	private String comRate;//陪伴者評分  SQL名字:companion_rate
-	private String serviceNo;//服務地區-編號  SQL名字:area_no
-	private String areaCity;//服務地區-城市  SQL名字:area_city
-	private String areaDistricy;//服務地區-區  SQL名字:area_district
+	private String area;//服務地區-城市+區  SQL名字:area
 	
 	
 }

@@ -50,5 +50,19 @@ public class ComApplicantDao implements dao<ComApplicant> {
 		return -1;
 	}
 
+	public List<ComApplicant> showAllApplicant(Integer memberId)throws Exception{
+		
+		return null;
+	} 
+	
+	public ComApplicant selectAccountMyById(Integer account ,Integer serviceId)throws Exception{
+		
+		return null;
+	}
+	
+	public ComApplicant selectAccountOtherById(Integer account ,Integer serviceId)throws Exception{
+		
+		return null;
+	}
 	
 }
