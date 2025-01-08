@@ -75,7 +75,6 @@ public class ChatRoomDaoImpl extends ChatRoomDao{
 					ChatRoom chatroom = new ChatRoom();
 					chatroom.setRoom_no(rs.getInt("room_no"));
 					chatroom.setOtherUserName(rs.getString("other_user_name"));	
-					
 					chatRooms.add(chatroom);
 				}
 				return chatRooms;
@@ -132,4 +131,5 @@ public class ChatRoomDaoImpl extends ChatRoomDao{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 }
