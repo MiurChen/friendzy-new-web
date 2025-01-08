@@ -14,12 +14,13 @@ import javax.ws.rs.core.Response;
 import com.google.gson.Gson;
 
 import core.pojo.Result;
+import core.pojo.chatResult;
+import web.chat.pojo.ChatRoom;
 import web.chat.service.ChatroomService;
 import web.chat.service.ChatroomServiceImpl;
 import web.member.pojo.Member;
 
 
-//FIXME:判斷是否存在聊天室
 @Path("/chatroom")
 public class CreatChatRoomController {
 	private ChatroomService chatroomService;
@@ -35,7 +36,7 @@ public class CreatChatRoomController {
 	@Path("/create/{otherUserId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response creatChatRoom(@PathParam ("otherUserId") Integer otherUserId) {
-		Result result = new Result();
+		chatResult<ChatRoom> result = new chatResult<>();
 		
 		HttpSession session = request.getSession(false);
 		
@@ -56,26 +57,19 @@ public class CreatChatRoomController {
 					.build();
 		}
 		try {
-			chatroomService.createChatRoom(currentMember.getMember_no(), otherUserId);
+			ChatRoom chatRoom = chatroomService.getOrCreateChatRoom(currentMember.getMember_no(), otherUserId);
 			result.setStatu(true);
 			result.setMessage("創建聊天室成功");
-			return Response.status(Response.Status.CREATED)
+			result.setData(chatRoom);
+			
+			return Response.status(Response.Status.OK)
 					.entity(new Gson().toJson(result))
 					.build();
 		} catch (Exception e) {
 			result.setStatu(false);
-			if (e.getMessage().contains("Chat room already exists")) {
-                result.setMessage("聊天室已存在");
-                return Response.status(Response.Status.CONFLICT)
-                        .entity(new Gson().toJson(result))
-                        .build();
-            } else {
-                result.setMessage("創建聊天室時發生錯誤: " + e.getMessage());
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                        .entity(new Gson().toJson(result))
-                        .build();
-            }
+			result.setMessage("操作失敗:" + e.getMessage());
 		}
+		return null;
 	}
 
 }
