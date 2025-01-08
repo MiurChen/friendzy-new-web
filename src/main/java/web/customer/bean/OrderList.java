@@ -18,5 +18,8 @@ public class OrderList {
 	private Integer order_status;
 	private Integer order_poster;
 	private String order_title;
+	private String service_detail;
+	private Long start_time;
+	private Long finished_time;
 	
 }

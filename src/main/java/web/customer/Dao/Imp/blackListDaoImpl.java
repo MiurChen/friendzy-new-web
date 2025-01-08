@@ -47,6 +47,8 @@ public class blackListDaoImpl extends blackListDao{
 		}
 		return blackLists;
 	} 
+	
+	
 //	@Override
 //	public int deleteBy(String id) throws Exception {
 //		String sql = "delete blacklist where user_id = ? and blacklist_id = ?";
@@ -65,6 +67,8 @@ public class blackListDaoImpl extends blackListDao{
 //		
 //		return -1;
 //	}
+	
+	
 	@Override
 	public int insert(BlackList item) throws Exception {
 		String sql = "insert into blacklist(user_id, blacklist_id, blackist_reason) values(?, ?, ?)";
