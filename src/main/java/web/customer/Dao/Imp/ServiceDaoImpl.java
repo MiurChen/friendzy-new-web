@@ -12,6 +12,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import web.customer.Dao.ServiceDao;
+import web.customer.bean.OrderList;
 import web.customer.bean.Service;
 
 public class ServiceDaoImpl extends ServiceDao {
@@ -86,7 +87,21 @@ public class ServiceDaoImpl extends ServiceDao {
 		}
 
 		return null;
-
+	}
+	
+	@Override
+	public int update(Service service) throws Exception {
+		String sql = "update service set service_status = 2 where service_id =?";
+		try(
+			Connection conn = ds.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql);	
+				) {
+			pstmt.setInt(1, service.getService_id());
+			return pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 
 }

@@ -23,5 +23,10 @@ public class blackListServiceImpl implements blackListservice{
 		
 		return null;
 	}
+	@Override
+	public Integer deleteByID(BlackList blackList) throws Exception {
+		Integer result = blackListDao.deleteBy(blackList);
+	    return result;
+	}
 
 }

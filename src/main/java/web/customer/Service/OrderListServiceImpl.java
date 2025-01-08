@@ -75,4 +75,12 @@ public class OrderListServiceImpl implements OrderListService {
 		return result;
 	}
 
+
+
+	@Override
+	public Integer updateStatus(OrderList orderList) throws Exception {
+		Integer result = orderlistdao.update(orderList);
+	    return result;
+	}
+
 }

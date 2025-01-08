@@ -8,4 +8,6 @@ public interface blackListservice {
 	List<BlackList> showAllBlackList(BlackList blackList) throws Exception;
 	
 	BlackList insertByID(BlackList blackList)throws Exception;
+	
+	Integer deleteByID(BlackList blackList) throws Exception;
 }

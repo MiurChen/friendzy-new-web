@@ -156,5 +156,20 @@ public class OrderListDaoImpl extends OrderListDao {
 			throw e;
 		}
 	}
+	
+//	@Override
+//	public int update(OrderList orderList) throws Exception {
+//		String sql = "update service set service_status = 2 where service_id =?";
+//		try(
+//			Connection conn = ds.getConnection();
+//			PreparedStatement pstmt = conn.prepareStatement(sql);	
+//				) {
+//			pstmt.setInt(1, orderList.getOrder_id());
+//			return pstmt.executeUpdate();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return -1;
+//	}
 
 }

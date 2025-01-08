@@ -15,5 +15,7 @@ public interface OrderListService {
 	OrderList addOrderList(OrderList orderList) throws Exception;
 	
 	Service addPost(Service service) throws Exception;
+	
+	Integer updateStatus(OrderList orderList) throws Exception;
 
 }

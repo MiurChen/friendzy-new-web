@@ -33,4 +33,10 @@ public class PostServiceImpl implements PostService {
 		
 	}
 
+	@Override
+	public Integer updateStatus(Service service) throws Exception {
+		Integer result = serviceDao.update(service);
+	    return result;
+	}
+
 }
