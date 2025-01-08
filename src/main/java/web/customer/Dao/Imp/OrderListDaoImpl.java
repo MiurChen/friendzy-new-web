@@ -28,12 +28,14 @@ public class OrderListDaoImpl extends OrderListDao {
 
 	@Override
 	public OrderList seleteBy(Integer order_id) throws Exception {
-		String sql = "select * from order_list where order_id = ?";
+		String sql = "select * from order_list o join member_info m on o.order_poster = m.member_no  join service s on o.order_poster = s.service_poster where order_id = ?";
 		try (Connection conn = ds.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
 			pstmt.setInt(1, order_id);
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
 					OrderList orderList = new OrderList();
+					Timestamp startTime = rs.getTimestamp("start_time");
+					Timestamp finishedTime = rs.getTimestamp("finished_time");
 					orderList.setOrder_id(rs.getInt("order_id"));
 					orderList.setService_idno(rs.getInt("service_idno"));
 					orderList.setOrder_person(rs.getInt("order_person"));
@@ -44,6 +46,10 @@ public class OrderListDaoImpl extends OrderListDao {
 					orderList.setOrder_price(rs.getDouble("order_price"));
 					orderList.setOrder_status(rs.getInt("order_status"));
 					orderList.setOrder_poster(rs.getInt("order_poster"));
+					orderList.setMember_name(rs.getString("member_name"));
+					orderList.setService_detail(rs.getString("servicr_detail"));
+					orderList.setStart_time(startTime.toInstant().toEpochMilli());
+					orderList.setFinished_time(finishedTime.toInstant().toEpochMilli());
 					return orderList;
 
 				}
@@ -87,47 +93,7 @@ public class OrderListDaoImpl extends OrderListDao {
 		return null;
 	}
 
-//	@Override
-//	public int insertService(Service service) throws Exception {
-//		OrderList orderList = new OrderList();
-//		String insertOrderList = "insert into order_list(order_poster, order_price, order_title) values(?, ?, ?)";
-//		String insertPost = "insert into service(service_poster, sverice_charge, service, start_time, finished_time, service_status, poster_status) values(?, ?, ?, ?, ?, ?, ?)";
-//		try(Connection conn = ds.getConnection();){
-//			conn.setAutoCommit(false);
-//			try (
-//				PreparedStatement orderPstmt = conn.prepareStatement(insertOrderList, Statement.RETURN_GENERATED_KEYS);
-//				PreparedStatement postPstmt = conn.prepareStatement(insertPost, Statement.RETURN_GENERATED_KEYS);
-//				ResultSet rs = 	postPstmt.getGeneratedKeys();
-//					){
-//				postPstmt.setInt(1, service.getService_poster());
-//				postPstmt.setDouble(2, service.getSverice_charge());
-//				postPstmt.setString(3,service.getSverice());
-//				postPstmt.setTimestamp(4,service.getStart_time());
-//				postPstmt.setTimestamp(5, service.getFinished_time());
-//				postPstmt.setInt(6, service.getService_status());
-//				postPstmt.setInt(7, service.getPoster_status());
-//				postPstmt.executeUpdate();
-//				
-//				if (rs.next()) {
-//					int orderID = rs.getInt(1);
-//					orderList.setOrder_id(orderID);
-//					orderList.setOrder_price(orderList.getOrder_price());
-//					orderList.setOrder_title(orderList.getOrder_title());
-//					
-//					orderPstmt.setInt(1, orderList.getOrder_poster());
-//					orderPstmt.setDouble(2, orderList.getOrder_price());
-//					orderPstmt.setString(3, orderList.getOrder_title());
-//					orderPstmt.executeUpdate();
-//				}
-//				conn.commit();
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return -1;
-//	}
-
-//@Override
+	@Override
 	public int insertService(Service service) throws Exception {
 		String insertOrderList = "INSERT INTO order_list(order_poster, order_price, order_title) VALUES (?, ?, ?)";
 		String insertPost = "INSERT INTO service(service_poster, sverice_charge, service, servicr_detail, start_time, finished_time,  poster_status) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -138,20 +104,20 @@ public class OrderListDaoImpl extends OrderListDao {
 			try (PreparedStatement postPstmt = conn.prepareStatement(insertPost, Statement.RETURN_GENERATED_KEYS);
 					PreparedStatement orderPstmt = conn.prepareStatement(insertOrderList)) {
 				// 插入 service 資料
-				  postPstmt.setInt(1, service.getService_poster());
-				    postPstmt.setDouble(2, service.getService_charge());
-				    postPstmt.setString(3, service.getService());
-				    postPstmt.setString(4, service.getService_detail());
+				postPstmt.setInt(1, service.getService_poster());
+				postPstmt.setDouble(2, service.getService_charge());
+				postPstmt.setString(3, service.getService());
+				postPstmt.setString(4, service.getService_detail());
 
-				    // 將 long 型態的時間戳轉換為 Timestamp
-				    Timestamp startTimestamp = new Timestamp(service.getStart_time());
-				    Timestamp finishTimestamp = new Timestamp(service.getFinished_time());
+				// 將 long 型態的時間戳轉換為 Timestamp
+				Timestamp startTimestamp = new Timestamp(service.getStart_time());
+				Timestamp finishTimestamp = new Timestamp(service.getFinished_time());
 
-				    // 設定 Timestamp 到 PreparedStatement
-				    postPstmt.setTimestamp(5, startTimestamp);
-				    postPstmt.setTimestamp(6, finishTimestamp);
+				// 設定 Timestamp 到 PreparedStatement
+				postPstmt.setTimestamp(5, startTimestamp);
+				postPstmt.setTimestamp(6, finishTimestamp);
 
-				    postPstmt.setInt(7, service.getPoster_status());
+				postPstmt.setInt(7, service.getPoster_status());
 
 				postPstmt.executeUpdate();
 
@@ -187,7 +153,7 @@ public class OrderListDaoImpl extends OrderListDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
-		}	
+		}
 	}
-	
+
 }
