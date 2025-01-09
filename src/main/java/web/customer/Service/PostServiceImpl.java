@@ -39,4 +39,10 @@ public class PostServiceImpl implements PostService {
 	    return result;
 	}
 
+	@Override
+	public Integer updateDeclineStatus(Service service) throws Exception {
+		Integer result = serviceDao.updateDeclineStatus(service);
+	    return result;
+	}
+
 }

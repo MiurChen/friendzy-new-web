@@ -91,7 +91,22 @@ public class ServiceDaoImpl extends ServiceDao {
 	
 	@Override
 	public int update(Service service) throws Exception {
-		String sql = "update service set service_status = 2 where service_id =?";
+		String sql = "update service set service_status = 1 where service_id =?";
+		try(
+			Connection conn = ds.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql);	
+				) {
+			pstmt.setInt(1, service.getService_id());
+			return pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	@Override
+	public int updateDeclineStatus(Service service) throws Exception {
+		String sql = "update service set service_status = 3 where service_id =?";
 		try(
 			Connection conn = ds.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(sql);	

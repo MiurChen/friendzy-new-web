@@ -65,7 +65,7 @@ public class OrderListDaoImpl extends OrderListDao {
 	@Override
 	public List<OrderList> seleteAll() throws Exception {
 		List<OrderList> orderLists = new ArrayList<OrderList>();
-		String sql = "select * from  order_list o join member_info m on o.order_person = m.member_no";
+		String sql = "select * from  order_list o left join member_info m on o.order_person = m.member_no;";
 		try (Connection conn = ds.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			try (ResultSet rs = pstmt.executeQuery()) {
 				while (rs.next()) {

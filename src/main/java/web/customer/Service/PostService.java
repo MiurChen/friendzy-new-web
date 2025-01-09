@@ -11,4 +11,6 @@ public interface PostService {
 	Service selectedPostList(Service service) throws Exception;
 	
 	Integer updateStatus(Service service) throws Exception;
+	
+	Integer updateDeclineStatus(Service service) throws Exception;
 }
