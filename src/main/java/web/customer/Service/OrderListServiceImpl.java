@@ -78,8 +78,13 @@ public class OrderListServiceImpl implements OrderListService {
 
 
 	@Override
-	public Integer updateStatus(OrderList orderList) throws Exception {
-		Integer result = orderlistdao.update(orderList);
+	public Integer updateStatus(Service service) throws Exception {
+		Integer result = orderlistdao.update(service);
+	    if (result > 0) {
+	        System.out.println("Update successful");
+	    } else {
+	        System.out.println("Update failed. No rows affected.");
+	    }
 	    return result;
 	}
 

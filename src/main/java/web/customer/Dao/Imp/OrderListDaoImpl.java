@@ -3,6 +3,7 @@ package web.customer.Dao.Imp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public class OrderListDaoImpl extends OrderListDao {
 
 	@Override
 	public int insertService(Service service) throws Exception {
-		String insertOrderList = "INSERT INTO order_list(order_poster, order_price, order_title) VALUES (?, ?, ?)";
+		String insertOrderList = "INSERT INTO order_list(order_poster, order_price, order_title,  service_idno) VALUES (?, ?, ?, ?)";
 		String insertPost = "INSERT INTO service(service_poster, sverice_charge, service, servicr_detail, start_time, finished_time,  poster_status, service_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 		try (Connection conn = ds.getConnection()) {
@@ -121,26 +122,59 @@ public class OrderListDaoImpl extends OrderListDao {
 				postPstmt.setInt(8, service.getService_status());
 
 				postPstmt.executeUpdate();
-
-				// 獲取 service 表自動生成的主鍵
+				OrderList orderList = new OrderList();
 				try (ResultSet rs = postPstmt.getGeneratedKeys()) {
-					if (rs.next()) {
-						int orderId = rs.getInt(1); // 獲取主鍵
-
-						// 創建 order_list 資料
-						OrderList orderList = new OrderList();
-						orderList.setOrder_id(orderId);
-						orderList.setOrder_poster(service.getService_poster()); // 從 service 中獲取
+				    if (rs.next()) {
+				        int serviceId = rs.getInt(1); // 獲取主鍵
+				        System.out.println("生成的 service_id: " + serviceId);
+				        
+				        orderList.setOrder_poster(service.getService_poster()); // 從 service 中獲取
 						orderList.setOrder_price(service.getService_charge()); // 金額等於服務收費
 						orderList.setOrder_title(service.getService()); // 自定義標題
-
-						// 插入 order_list 資料
-						orderPstmt.setInt(1, orderList.getOrder_poster());
-						orderPstmt.setDouble(2, orderList.getOrder_price());
-						orderPstmt.setString(3, orderList.getOrder_title());
-						orderPstmt.executeUpdate();
-					}
+						orderList.setService_idno(service.getService_id());
+				        if (serviceId != 0) {
+				            orderList.setService_idno(serviceId);
+				        } else {
+				            throw new SQLException("service_id 無效，無法插入 order_list");
+				        }
+				    } else {
+				        throw new SQLException("無法獲取 service 表的主鍵");
+				    }
 				}
+
+				// 檢查是否成功設置 service_idno
+				if (orderList.getService_idno() == null) {
+				    throw new NullPointerException("OrderList 的 service_idno 為 null，請檢查邏輯");
+				}
+
+				// 插入 order_list
+				orderPstmt.setInt(1, orderList.getOrder_poster());
+				orderPstmt.setDouble(2, orderList.getOrder_price());
+				orderPstmt.setString(3, orderList.getOrder_title());
+				orderPstmt.setInt(4, orderList.getService_idno()); // 確保這裡的值不為 null
+				orderPstmt.executeUpdate();
+
+				// 獲取 service 表自動生成的主鍵
+//				try (ResultSet rs = postPstmt.getGeneratedKeys()) {
+//					if (rs.next()) {
+//						int orderId = rs.getInt(1); // 獲取主鍵
+//
+//						// 創建 order_list 資料
+//						OrderList orderList = new OrderList();
+//						orderList.setOrder_id(orderId);
+//						orderList.setOrder_poster(service.getService_poster()); // 從 service 中獲取
+//						orderList.setOrder_price(service.getService_charge()); // 金額等於服務收費
+//						orderList.setOrder_title(service.getService()); // 自定義標題
+//						orderList.setService_idno(service.getService_id());
+//
+//						// 插入 order_list 資料
+//						orderPstmt.setInt(1, orderList.getOrder_poster());
+//						orderPstmt.setDouble(2, orderList.getOrder_price());
+//						orderPstmt.setString(3, orderList.getOrder_title());
+//						orderPstmt.setInt(4, orderList.getService_idno());
+//						orderPstmt.executeUpdate();
+//					}
+//				}
 
 				conn.commit(); // 提交交易
 				return 1; // 表示成功
@@ -157,19 +191,25 @@ public class OrderListDaoImpl extends OrderListDao {
 		}
 	}
 	
-//	@Override
-//	public int update(OrderList orderList) throws Exception {
-//		String sql = "update service set service_status = 2 where service_id =?";
-//		try(
-//			Connection conn = ds.getConnection();
-//			PreparedStatement pstmt = conn.prepareStatement(sql);	
-//				) {
-//			pstmt.setInt(1, orderList.getOrder_id());
-//			return pstmt.executeUpdate();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return -1;
-//	}
+	@Override
+	public int update(Service service) throws Exception {
+		String sql = "UPDATE order_list o "
+		           + "JOIN service s ON o.service_idno= s.service_id "
+		           + "SET order_status = 1, service_status = 1 "
+		           + "WHERE service_id = ?";
+		try(
+			Connection conn = ds.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql);	
+				) {
+			pstmt.setInt(1, service.getService_id());
+			int rowsAffected = pstmt.executeUpdate();
+			System.out.println("Service ID: " + service.getService_id());
+			System.out.println("Rows affected: " + rowsAffected);
+			return rowsAffected;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
 
 }

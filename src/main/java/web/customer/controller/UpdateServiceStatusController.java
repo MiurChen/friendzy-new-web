@@ -16,10 +16,10 @@ import web.customer.bean.OrderList;
 import web.customer.bean.Service;
 
 @Path("/customer/updateStatus")
-public class UpdateOrderStatusController {
+public class UpdateServiceStatusController {
 	private PostService postService;
 	
-	public UpdateOrderStatusController() throws NamingException {
+	public UpdateServiceStatusController() throws NamingException {
 		postService = new PostServiceImpl();
 	}
 	

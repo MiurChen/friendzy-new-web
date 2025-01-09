@@ -53,6 +53,11 @@ public class OrderListDao implements dao<OrderList>{
 		return 0;
 	}
 
+	public int update(Service service) throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	@Override
 	public int update(OrderList item) throws Exception {
 		// TODO Auto-generated method stub
