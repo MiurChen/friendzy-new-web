@@ -7,7 +7,7 @@ import web.companion.pojo.ComOrder;
 
 public interface ComOrderListService{
 	
-		ComOrder showMyOrder(Integer meberNo , Integer person , Integer orderId) throws Exception;
+		ComOrder showMyOrder(Integer meberNo , Integer poster , Integer orderId) throws Exception;
 			
 		List<ComOrder> showAllOrder(Integer meberNo) throws Exception;
 	

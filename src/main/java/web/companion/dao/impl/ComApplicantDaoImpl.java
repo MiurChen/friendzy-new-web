@@ -174,7 +174,7 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 					applicant.setOrderPosterName(rs.getString("poster_name"));
 					applicant.setOrderPoster(rs.getInt("order_poster"));
 					applicant.setService(rs.getString("service"));
-					applicant.setServiceDatil(rs.getString("servicr_detail"));
+					applicant.setServiceDetail(rs.getString("servicr_detail"));
 					applicant.setStartTime(rs.getTimestamp("start_time"));
 					applicant.setEndTime(rs.getTimestamp("finished_time"));
 					applicant.setOrderPrice(rs.getDouble("order_price"));
@@ -185,7 +185,6 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 					applicant.setApplicationResult(rs.getInt("application_result"));
 					return applicant;
 				}
-				return null;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -236,7 +235,7 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 					applicant.setOrderPosterName(rs.getString("poster_name"));
 					applicant.setOrderPoster(rs.getInt("order_poster"));
 					applicant.setService(rs.getString("service"));
-					applicant.setServiceDatil(rs.getString("servicr_detail"));
+					applicant.setServiceDetail(rs.getString("servicr_detail"));
 					applicant.setStartTime(rs.getTimestamp("start_time"));
 					applicant.setEndTime(rs.getTimestamp("finished_time"));
 					applicant.setOrderPrice(rs.getDouble("order_price"));
@@ -247,7 +246,6 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 					applicant.setApplicationResult(rs.getInt("application_result"));
 					return applicant;
 				}
-				return null;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

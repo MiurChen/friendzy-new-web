@@ -1,5 +1,6 @@
 package web.companion.controller;
 
+import java.lang.reflect.Member;
 import java.util.List;
 
 import javax.naming.NamingException;
@@ -39,12 +40,13 @@ public class ComOrderController{
 	//取得特定ID的訂單詳細資訊
 	// FIXME 之後再再補上自己的會員編號
 	@GET
-	@Path("/showId/{memberNo}/{servicePerson}/{orderId}")
+	@Path("/showId/{memberNo}/{servicePoster}/{orderId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ComOrder showOrder(@PathParam("memberNo") Integer meberNo , @PathParam("servicePerson") Integer person , @PathParam("orderId") Integer orderId) throws Exception {
+	public ComOrder showOrder(@PathParam("memberNo") Integer meberNo , @PathParam("servicePoster") Integer poster , @PathParam("orderId") Integer orderId) throws Exception {
 //		return comOrderDao.selectPosterMeBy(id);
 //		return comOrderDao.selectPosterOtherBy(id);
-		return orderListService.showMyOrder(meberNo,person,orderId);
+		System.out.println("memberNo："+meberNo+" Poster:"+poster+" orderId："+orderId);
+		return orderListService.showMyOrder(meberNo,poster,orderId);
 //		return orderListService.shortOtherOrder(id);
 	}
 	//變更訂單狀態

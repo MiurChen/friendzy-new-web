@@ -20,11 +20,12 @@ public class ComApplicant {//應徵者
 	private Integer orderPoster;//刊登者Id  SQL名字:order_poster(訂單)
 	
 	private String service;//刊登標題   SQL名字:service
-	private String serviceDatil;//刊登內容  SQL名字:servicr_detail
+	private String serviceDetail;//刊登內容  SQL名字:servicr_detail
 	private Timestamp startTime;//開始時間  SQL名字:start_time
 	private Timestamp endTime;//結束時間  SQL名字:finished_time
 	private Double orderPrice;//金額  SQL名字:order_price(訂單) sverice_charge(服務)
 	private String area;//服務地區-城市+區  SQL名字:area
+	private String serviceImg;//服務圖片
 	
 	private Integer accountId;//應徵者ID 	SQL名字:applicant_account
 	private String accountName;//應徵者名字  SQL名字:account_name

@@ -73,12 +73,11 @@ public class ComOrderDaoImpl extends ComOrderDao {
 				+ "o.order_person as 'order_person',"
 				+ "m1.member_name as'Person_name',"
 				+ "o.order_poster as 'order_poster',"
-				+ "m2.member_name as'Person_name',"
+				+ "m2.member_name as'poster_name',"
 				+ "o.order_status as 'order_status',"
 				+ "s.service_status as'service_status',"
 				+ "s.start_time as'start_time',"
-				+ "sa.area_city as'area_city',"
-				+ "sa.area_district as'area_district'"
+				+ "concat( sa.area_city,' ', sa.area_district) as'area'"
 				+ " from order_list o join service s join member_info m1 join member_info m2 join service_area sa"
 				+ " on s.service_id = o.service_idno and o.order_person = m1.member_no and"
 				+ " o.order_poster = m2.member_no and s.service_location = sa.area_no"
@@ -97,9 +96,12 @@ public class ComOrderDaoImpl extends ComOrderDao {
 					orderList.setService(rs.getString("service"));
 					orderList.setOrderPerson(rs.getInt("order_person"));
 					orderList.setOrderPersonName(rs.getString("Person_name"));
+					orderList.setOrderPoster(rs.getInt("order_poster"));
+					orderList.setOrderPosterName(rs.getString("poster_name"));
 					orderList.setOrderStatus(rs.getInt("order_status"));
 					orderList.setServiceStatus(rs.getInt("service_status"));
 					orderList.setStartTime(rs.getTimestamp("start_time"));
+					orderList.setArea(rs.getString("area"));
 					orderLists.add(orderList);
 				}
 				return orderLists;
@@ -114,9 +116,9 @@ public class ComOrderDaoImpl extends ComOrderDao {
 	public ComOrder selectPosterMeBy(Integer id) throws Exception {
 		String sql = "select o.order_id as 'order_id',"
 				+ "s.service_id as'service_id',"
-				//m1為購買人person m2為刊登者Poster 
-				+ "o.order_Poster as'their_id',"
-				+ "m2.member_name as'their_name',"
+				//m1為購買人person m2為刊登者poster 
+				+ "o.order_person as'their_id',"
+				+ "m1.member_name as'their_name',"
 				//對方↑
 				+ "o.order_poster as'order_poster',"
 				+ "m2.member_name as'poster_name',"
@@ -165,12 +167,10 @@ public class ComOrderDaoImpl extends ComOrderDao {
 					order.setComRateContent(rs.getString("companion_rate_content")); // 陪伴者評價
 					return order;
 				}
-				return null;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return null;
 	}
 	
@@ -178,9 +178,9 @@ public class ComOrderDaoImpl extends ComOrderDao {
 	public ComOrder selectPosterOtherBy(Integer id) throws Exception {
 		String sql = "select o.order_id as 'order_id',"
 				+ "s.service_id as'service_id',"
-				//m1為購買人person m2為刊登者Poster 
-				+ "o.order_person as'their_id',"
-				+ "m1.member_name as'their_name',"
+				//m1為購買人person m2為刊登者poster 
+				+ "o.order_poster as'their_id',"
+				+ "m2.member_name as'their_name',"
 				//對方↑
 				+ "o.order_poster as'order_poster',"
 				+ "m2.member_name as'poster_name',"
@@ -229,7 +229,6 @@ public class ComOrderDaoImpl extends ComOrderDao {
 					order.setComRateContent(rs.getString("companion_rate_content")); // 陪伴者評價
 					return order;
 				}
-				return null;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

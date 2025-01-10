@@ -30,10 +30,12 @@ public class ComOrderListServiceImpl implements ComOrderListService{
 	
 	//取得特定ID的訂單詳細資訊
 	@Override
-	public ComOrder showMyOrder(Integer meberNo , Integer person , Integer orderId) throws Exception {
-		if (person != meberNo) {//我為刊登者
+	public ComOrder showMyOrder(Integer meberNo , Integer poster , Integer orderId) throws Exception {
+		if (poster == meberNo) {//我為刊登者
+			System.out.println("posterMe");
 			return comOrderDao.selectPosterMeBy(orderId);
 		}else {//對方為刊登者
+			System.out.println("posterOther");
 			return comOrderDao.selectPosterOtherBy(orderId);
 		}
 	}
