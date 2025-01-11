@@ -28,6 +28,8 @@ public abstract class MemberDao implements dao<Member> {
 	public abstract int updateNickname(Member member);
 
 	public abstract int updatePhone(Member member);
+
+	public abstract int updateIntroduction(Member member);
 	
 	
 
