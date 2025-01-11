@@ -16,18 +16,7 @@ public class OrderListServiceImpl implements OrderListService {
 		orderlistdao = new OrderListDaoImpl();
 	}
 
-	@Override
-	public OrderList showSingleList(OrderList orderList) throws Exception {
-		Integer order_id = orderList.getOrder_id();
-//		Integer service_idno = orderList.getService_idno();
-//		Integer order_person = orderList.getOrder_person();
-//		Double order_price = orderList.getOrder_price();
-//		Integer order_status = orderList.getOrder_status();
-//		Integer order_poster = orderList.getOrder_poster();
 
-		orderlistdao.seleteBy(order_id);
-		return null;
-	}
 
 	@Override
 	public List<OrderList> showAllList() throws Exception {
@@ -75,6 +64,28 @@ public class OrderListServiceImpl implements OrderListService {
 	public OrderList addOrderList(OrderList orderList) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+
+	@Override
+	public OrderList selectedOrder(OrderList orderList) throws Exception {
+		Integer order_id = orderList.getOrder_id();
+		OrderList result = orderlistdao.seleteBy(order_id);
+		return result;
+	}
+
+
+
+	@Override
+	public Integer updateStatus(Service service) throws Exception {
+		Integer result = orderlistdao.update(service);
+	    if (result > 0) {
+	        System.out.println("Update successful");
+	    } else {
+	        System.out.println("Update failed. No rows affected.");
+	    }
+	    return result;
 	}
 
 }

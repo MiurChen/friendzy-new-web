@@ -37,4 +37,9 @@ public class blackListDao implements dao<BlackList>{
 		return null;
 	}
 
+	public int deleteBy(BlackList blackList) throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

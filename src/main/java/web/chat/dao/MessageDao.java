@@ -16,4 +16,5 @@ public abstract class MessageDao implements dao<Message>{
 	@Override
 	public abstract List<Message> seleteAll() throws Exception;
 
+	public abstract List<Message> selectMessagesByRoom(int roomNo) throws Exception;
 }

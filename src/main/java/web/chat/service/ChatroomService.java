@@ -8,5 +8,5 @@ public interface ChatroomService {
 
 	List<ChatRoom> getChatRoomsByEmail(String email) throws Exception;
 	
-	void createChatRoom(Integer currentUserId, Integer otherUserId) throws Exception;
+	ChatRoom getOrCreateChatRoom (Integer room_user_one, Integer room_user_two) throws Exception;
 }

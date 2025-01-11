@@ -20,8 +20,7 @@ public class OrderListDao implements dao<OrderList>{
 		return 0;
 	}
 
-	@Override
-	public int update(OrderList item) throws Exception {
+	public int update(Integer order_id) throws Exception {
 		
 		return 0;
 	}
@@ -50,6 +49,17 @@ public class OrderListDao implements dao<OrderList>{
 	}
 
 	public int insertService(Service service) throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int update(Service service) throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int update(OrderList item) throws Exception {
 		// TODO Auto-generated method stub
 		return 0;
 	}

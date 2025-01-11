@@ -33,11 +33,21 @@ public class ChatRoomDaoImpl extends ChatRoomDao{
 			pstmt.setInt(1, chatroom.getRoom_user_one());
 			pstmt.setInt(2, chatroom.getRoom_user_two());
 			
-			return pstmt.executeUpdate();
+			int result = pstmt.executeUpdate();
 			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception("Error while inserting new chat room.");
+			if (result > 0) {
+				try (ResultSet generatedKeys = pstmt.getGeneratedKeys()
+					){
+					if(generatedKeys.next()
+						){
+					chatroom.setRoom_no(generatedKeys.getInt(1));
+					}
+				} 
+			}
+				return result;
+			}catch (Exception e) {
+				e.printStackTrace();
+				throw new Exception("Error while inserting new chat room.");
 		}
 	}
 	
@@ -52,7 +62,7 @@ public class ChatRoomDaoImpl extends ChatRoomDao{
 		
 		Integer memberNo = member.getMember_no();
 		
-		String sql = "SELECT c.room_no, "
+		String sql = "SELECT c.room_no, c.room_user_one, c.room_user_two, "
 	               + "CASE "
 	               + "    WHEN c.room_user_one = ? THEN m2.member_name "
 	               + "    WHEN c.room_user_two = ? THEN m1.member_name "
@@ -74,8 +84,9 @@ public class ChatRoomDaoImpl extends ChatRoomDao{
 				while (rs.next()) {
 					ChatRoom chatroom = new ChatRoom();
 					chatroom.setRoom_no(rs.getInt("room_no"));
+					chatroom.setRoom_user_one(rs.getInt("room_user_one"));
+					chatroom.setRoom_user_two(rs.getInt("room_user_two"));
 					chatroom.setOtherUserName(rs.getString("other_user_name"));	
-					
 					chatRooms.add(chatroom);
 				}
 				return chatRooms;
@@ -127,9 +138,49 @@ public class ChatRoomDaoImpl extends ChatRoomDao{
 		return null;
 	}
 
-	@Override //沒有這功能
+	@Override
 	public int update(ChatRoom item) throws Exception {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	public ChatRoom findExistingRoom(Integer room_user_one, Integer room_user_two) throws Exception{
+		String sql = "SELECT c.room_no, c.room_user_one, c.room_user_two, " +
+                	"CASE " +
+                	"WHEN c.room_user_one = ? THEN m2.member_name " +
+                	"WHEN c.room_user_two = ? THEN m1.member_name " +
+                	"END AS other_user_name " +
+                	"FROM chat_room c " +
+                	"LEFT JOIN member_info m1 ON c.room_user_one = m1.member_no " +
+                	"LEFT JOIN member_info m2 ON c.room_user_two = m2.member_no " +
+                	"WHERE (c.room_user_one = ? AND c.room_user_two = ?) " +
+                	"OR (c.room_user_one = ? AND c.room_user_two = ?) " +
+                	"LIMIT 1";
+		try (Connection conn = ds.getConnection(); 
+				PreparedStatement pstms = conn.prepareStatement(sql);
+			){
+				pstms.setInt(1, room_user_one);
+				pstms.setInt(2, room_user_one);
+				pstms.setInt(3, room_user_one);
+				pstms.setInt(4, room_user_two);
+				pstms.setInt(5, room_user_two);
+				pstms.setInt(6, room_user_one);
+				
+				try (ResultSet rs = pstms.executeQuery()) {
+					if (rs.next()) {
+						ChatRoom chatRoom = new ChatRoom();
+						chatRoom.setRoom_no(rs.getInt("room_no"));
+						chatRoom.setRoom_user_one(rs.getInt("Room_user_one"));
+						chatRoom.setRoom_user_two(rs.getInt("Room_user_two"));
+						chatRoom.setOtherUserName(rs.getString("other_user_name"));
+						return chatRoom;
+					}
+					return null;
+					}
+				}catch (Exception e) {
+					e.printStackTrace();
+					throw new Exception("Error while checking if chat room exists." + e.getMessage(), e);
+				}
+	}
+
 }

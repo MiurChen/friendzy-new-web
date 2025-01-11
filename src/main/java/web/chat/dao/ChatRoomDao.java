@@ -15,11 +15,14 @@ public abstract class ChatRoomDao implements dao<ChatRoom>{
 	public abstract ChatRoom seleteBy(String id) throws Exception;
 
 	public List<ChatRoom> selectRoomsByEmail(String id) throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public boolean doesChatRoomExist(Integer room_user_one, Integer room_user_two) throws Exception{
 		return false;
+	}
+	
+	public ChatRoom findExistingRoom(Integer room_user_one, Integer room_user_two) throws Exception{
+		return null;
 	}
 }
