@@ -51,7 +51,7 @@ public class ComOrderController{
 	}
 	//變更訂單狀態
 	@PUT
-	@Path("/StatusUp")
+	@Path("/statusUp")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ComOrder update(ComOrder comOrder)throws Exception{

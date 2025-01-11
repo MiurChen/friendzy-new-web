@@ -70,9 +70,9 @@ public class ComPublishDao implements dao<ComPublish>{
 	}
 	
 	//刊登新增訂單資料
-	public ComPublish addorder(ComPublish publish) throws Exception{
+	public int addOrder(ComPublish publish) throws Exception{
 		
-		return null;
+		return -1;
 	}
 	
 }

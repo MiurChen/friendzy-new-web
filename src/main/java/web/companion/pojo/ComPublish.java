@@ -25,7 +25,7 @@ public class ComPublish {
 	private Timestamp startTime;//開始時間  SQL名字:start_time
 	private Timestamp endTime;//結束時間  SQL名字:finished_time
 	private Double charge;//金額  SQL名字:order_price(訂單) sverice_charge(服務)
-	private String area;//服務地區-城市+區  SQL名字:area
+	private String area;//服務地區-城市+區(接收：地區編號)  SQL名字:area 
 	private String serviceImg;//服務圖片 SQL名字：service_img
 
 	private Integer accountId;//應徵者ID 	SQL名字:applicant_account

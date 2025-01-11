@@ -11,4 +11,7 @@ public interface ComApplicantService{
 	
 	ComApplicant showApplocantById(Integer meberNo , Integer account , Integer serviceId)throws Exception;
 	
+	int addApplicant(Integer serviceId,Integer memberNo) throws Exception;
+	
+	int statusUpdate(ComApplicant applicant) throws Exception;
 }

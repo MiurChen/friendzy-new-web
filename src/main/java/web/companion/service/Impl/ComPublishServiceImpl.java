@@ -29,9 +29,12 @@ public class ComPublishServiceImpl implements ComPublishService{
 	}
 
 	@Override
-	public String addMyPublish(ComPublish publish) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public int addMyPublish(ComPublish publish) throws Exception {
+		System.out.println("publish:");
+		System.out.println(publish);
+		ComPublish serviceId = comPublishDao.addService(publish);
+		System.out.println(serviceId);
+		return comPublishDao.addOrder(serviceId);
 	}
 
 	@Override

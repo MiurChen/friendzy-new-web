@@ -99,7 +99,7 @@ public class ComPublishDaoImpl extends ComPublishDao{
 					publish.setCharge(rs.getDouble("sverice_charge"));
 					publish.setServiceImg(rs.getString("service_img"));
 					publish.setArea(rs.getString("area"));
-					System.out.println(publish);
+//					System.out.println(publish);
 					return publish;
 				}
 			}
@@ -157,6 +157,64 @@ public class ComPublishDaoImpl extends ComPublishDao{
 		return null;
 	}
 	
+	//刊登新增服務資料
+	public ComPublish addService(ComPublish publish) throws Exception{
+		String insertSql = " insert into service(service_poster , service , servicr_detail , start_time ,"
+				+ " finished_time , sverice_charge , service_status , service_location , poster_status)"
+				+ " value(? , ? , ? , ? , ? , ? , ? , ? , ?);";
+		String selectSql =" select service_id , sverice_charge , service_poster , service"
+				+ " from service"
+				+ " where service_id = (select max(service_id) as 'serviceId' from service);";
+			try (
+				Connection connection = ds.getConnection();
+				PreparedStatement psI = connection.prepareStatement(insertSql);
+				PreparedStatement psS = connection.prepareStatement(selectSql);
+			){
+				psI.setInt(1, publish.getMemberNo());
+				psI.setString(2, publish.getService());
+				psI.setString(3, publish.getServiceDetail());
+				psI.setTimestamp(4, publish.getStartTime());
+				psI.setTimestamp(5, publish.getEndTime());
+				psI.setDouble(6, publish.getCharge());
+				psI.setInt(7, publish.getServiceStatus());
+				psI.setString(8, publish.getArea());
+				psI.setInt(9, publish.getPosterStatus());
+				System.out.println(psI.executeUpdate());
+				try (ResultSet rs = psS.executeQuery()){
+					if (rs.next()) {
+						ComPublish serviceId = new ComPublish();
+						serviceId.setServiceId(rs.getInt("service_Id"));
+						serviceId.setService(rs.getString("service"));
+						serviceId.setPoster(rs.getInt("service_poster"));
+						serviceId.setCharge(rs.getDouble("sverice_charge"));
+						System.out.println(serviceId);
+						return serviceId;
+					}
+				} 
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
+		return null;
+	}
+	
+	//刊登新增訂單資料
+	public int addOrder(ComPublish publish) throws Exception{
+		String sql = "insert into order_list(service_idno , order_price , order_status , order_poster , order_title)"
+				+ " value(? , ? , 0 , ? , ?);";
+			try (
+				Connection connection = ds.getConnection();
+				PreparedStatement ps = connection.prepareStatement(sql);
+			){
+				ps.setInt(1, publish.getServiceId());
+				ps.setDouble(2, publish.getCharge());
+				ps.setInt(3, publish.getPoster());
+				ps.setString(4, publish.getService());
+				return ps.executeUpdate();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
+		return -1;
+	}
 	
 	
 }

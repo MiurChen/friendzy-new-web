@@ -40,6 +40,7 @@ public class ComOrderDaoImpl extends ComOrderDao {
 			){
 				ps.setInt(1, item.getOrderStatus());
 				ps.setInt(2, item.getOrderId());
+				System.out.println("狀態更改");
 				return ps.executeUpdate();
 			}catch (Exception e) {
 				e.printStackTrace();
@@ -114,6 +115,7 @@ public class ComOrderDaoImpl extends ComOrderDao {
 	
 	@Override
 	public ComOrder selectPosterMeBy(Integer id) throws Exception {
+		System.out.println("111111111111");
 		String sql = "select o.order_id as 'order_id',"
 				+ "s.service_id as'service_id',"
 				//m1為購買人person m2為刊登者poster 
@@ -136,7 +138,7 @@ public class ComOrderDaoImpl extends ComOrderDao {
 				+ "o.companion_rate as 'companion_rate',"
 				+ "o.companion_rate_content as'companion_rate_content'"
 				+ "from order_list o join service s join member_info m1 join member_info m2 on"
-				+ " s.service_id = o.order_id and o.order_person = m1.member_no and o.order_poster = m2.member_no "
+				+ " s.service_id = o.service_idno and o.order_person = m1.member_no and o.order_poster = m2.member_no "
 				+ " where o.order_id = ?";
 		try (
 			Connection conn = ds.getConnection();
@@ -165,10 +167,13 @@ public class ComOrderDaoImpl extends ComOrderDao {
 					order.setCusRateContent(rs.getString("customer_rate_content")); // 顧客評價
 					order.setComRate(rs.getString("companion_rate")); // 陪伴者評分
 					order.setComRateContent(rs.getString("companion_rate_content")); // 陪伴者評價
+					System.out.println("我刊登");
+					System.out.println(order);
 					return order;
 				}
 			}
 		} catch (Exception e) {
+			System.out.println("錯誤");
 			e.printStackTrace();
 		}
 		return null;
@@ -198,7 +203,7 @@ public class ComOrderDaoImpl extends ComOrderDao {
 				+ "o.companion_rate as 'companion_rate',"
 				+ "o.companion_rate_content as'companion_rate_content'"
 				+ "from order_list o join service s join member_info m1 join member_info m2 on"
-				+ " s.service_id = o.order_id and o.order_person = m1.member_no and o.order_poster = m2.member_no "
+				+ " s.service_id = o.service_idno and o.order_person = m1.member_no and o.order_poster = m2.member_no "
 				+ " where o.order_id = ?";
 		try (
 			Connection conn = ds.getConnection();
@@ -227,6 +232,8 @@ public class ComOrderDaoImpl extends ComOrderDao {
 					order.setCusRateContent(rs.getString("customer_rate_content")); // 顧客評價
 					order.setComRate(rs.getString("companion_rate")); // 陪伴者評分
 					order.setComRateContent(rs.getString("companion_rate_content")); // 陪伴者評價
+					System.out.println("對方刊登");
+					System.out.println(order);
 					return order;
 				}
 			}

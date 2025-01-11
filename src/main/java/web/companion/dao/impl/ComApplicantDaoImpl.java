@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,9 +77,9 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 	
 	//更改應徵table的應徵狀態為1
 	@Override
-	public int applyStatusUpdate(Integer serviceId) throws Exception{
+	public int updateAllStatus(Integer serviceId) throws Exception{
 		//應徵狀態 0:未應徵 1:已應徵
-		String sql = "update applicant set apply_status = 1 and where service_id = ?;";
+		String sql = "update applicant set apply_status = 1 where service_id = ?;";
 		try (
 				Connection connection = ds.getConnection();
 				PreparedStatement ps = connection.prepareStatement(sql);
@@ -91,17 +93,36 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 	}
 	
 	@Override
+	public int updateStatusById(ComApplicant applicant) throws Exception{
+		//應徵狀態 0:未應徵 1:已應徵
+		String sql = "update applicant set apply_status = 1 where service_id = ? and applicant_account  = ?;";
+		try (
+				Connection connection = ds.getConnection();
+				PreparedStatement ps = connection.prepareStatement(sql);
+			){
+				ps.setInt(1, applicant.getServiceId());
+				ps.setInt(2, applicant.getAccountId());
+				return ps.executeUpdate();
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			return -1;
+	}
+	
+	@Override
 	public List<ComApplicant> showAllApplicant(Integer memberId)throws Exception{
 		List<ComApplicant> lists = new ArrayList<ComApplicant>();
 		String sql = "select o.order_id as 'order_id',"
+				+ "a.service_id as'service_id',"
+				+ "s.service_poster as'order_poster',"
 				+ "a.applicant_account as 'applicant_account',"
 				+ "m2.member_name as 'account_name',"
 				+ "a.apply_status as'apply_status',"
-				+ "a.applicant_account as'application_result',"
+				+ "a.application_result as'application_result',"
 				+ "s.service as'service',"
 				+ "s.start_time as'start_time'"
 				+ " from order_list o join service s join member_info m1"
-				+ " join member_info m2 join service_area sa join applicant"
+				+ " join member_info m2 join service_area sa join applicant a"
 				+ " on s.service_id = o.service_idno and s.service_location = sa.area_no and s.service_id = a.service_id"
 				+ " and s.service_poster = m1.member_no and a.applicant_account = m2.member_no"
 				+ " where m1.member_no = ? or m2.member_no = ?;";
@@ -115,6 +136,8 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 					while (rs.next()) {
 						ComApplicant list = new ComApplicant();
 						list.setOrderId(rs.getInt("order_id"));
+						list.setServiceId(rs.getInt("service_id"));
+						list.setOrderPoster(rs.getInt("order_poster"));
 						list.setAccountId(rs.getInt("applicant_account"));
 						list.setAccountName(rs.getString("account_name"));
 						list.setApplyStatus(rs.getInt("apply_status"));
@@ -122,6 +145,9 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 						list.setService(rs.getString("service"));
 						list.setStartTime(rs.getTimestamp("start_time"));
 						lists.add(list);
+						System.out.println(lists);
+						System.out.println("/n");
+
 					}
 					return lists;
 				}
@@ -183,6 +209,7 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 					applicant.setAccountName(rs.getString("account_name"));
 					applicant.setApplyStatus(rs.getInt("apply_status"));
 					applicant.setApplicationResult(rs.getInt("application_result"));
+					System.out.println(applicant);
 					return applicant;
 				}
 			}
@@ -244,6 +271,7 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 					applicant.setAccountName(rs.getString("account_name"));
 					applicant.setApplyStatus(rs.getInt("apply_status"));
 					applicant.setApplicationResult(rs.getInt("application_result"));
+					System.out.println(applicant);
 					return applicant;
 				}
 			}
@@ -253,4 +281,24 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 		return null;
 	}
 	
+	public int addApplicant(Integer serviceId,Integer memberNo ) throws Exception{
+		
+		String sql = " insert into applicant("
+				+ " service_id,applicant_account,application_date,apply_status,application_result)"
+				+ " value(? , ? , ? , 0 , 0);";
+		try (
+				Connection connection = ds.getConnection();
+				PreparedStatement ps = connection.prepareStatement(sql);
+			){
+				LocalDateTime now = LocalDateTime.now();
+				Timestamp timestamp = Timestamp.valueOf(now);
+				ps.setInt(1, serviceId);
+				ps.setInt(2, memberNo);
+				ps.setTimestamp(3, timestamp);
+				return ps.executeUpdate();
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			return -1;
+	}
 }

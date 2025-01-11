@@ -45,7 +45,12 @@ public class ComApplicantDao implements dao<ComApplicant> {
 		
 		return -1;
 	}
-	public int applyStatusUpdate(Integer serviceId) throws Exception{
+	public int updateAllStatus(Integer serviceId) throws Exception{
+		
+		return -1;
+	}
+	
+	public int updateStatusById(ComApplicant applicant) throws Exception{
 		
 		return -1;
 	}
@@ -63,6 +68,11 @@ public class ComApplicantDao implements dao<ComApplicant> {
 	public ComApplicant selectAccountOtherById(Integer account ,Integer serviceId)throws Exception{
 		
 		return null;
+	}
+	
+	public int addApplicant(Integer serviceId,Integer memberNo ) throws Exception{
+		
+		return -1;
 	}
 	
 }

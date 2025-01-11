@@ -3,7 +3,10 @@ package web.companion.controller;
 import java.util.List;
 
 import javax.naming.NamingException;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -15,10 +18,10 @@ import web.companion.service.Impl.ComApplicantServiceImpl;
 
 @Path("/companion/appoint")
 public class ComApplicantController{
-	private ComApplicantService ApplicantService;
+	private ComApplicantService applicantService;
 	
 	public ComApplicantController() throws NamingException{
-		ApplicantService = new ComApplicantServiceImpl();
+		applicantService = new ComApplicantServiceImpl();
 	}
 	
 	//取得所有應徵
@@ -26,17 +29,32 @@ public class ComApplicantController{
 	@Path("/showAll/{memberNo}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ComApplicant> showAllApplicants(@PathParam("memberNo") Integer memberNo) throws Exception{
-		return ApplicantService.showAllApplocant(memberNo);
+		return applicantService.showAllApplocant(memberNo);
 	}
 	
 	//取得單筆詳細資訊
 	@GET
 	@Path("/showId/{memberNo}/{account}/{serviceId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ComApplicant showApplicant(@PathParam("memberNo") Integer meberNo , @PathParam("servicePoster") Integer account , @PathParam("serviceId") Integer serviceId)throws Exception{
-		return ApplicantService.showApplocantById(meberNo, account, serviceId);
+	public ComApplicant showApplicant(@PathParam("memberNo") Integer meberNo , @PathParam("account") Integer account , @PathParam("serviceId") Integer serviceId)throws Exception{
+		System.out.println(account);
+		return applicantService.showApplocantById(meberNo, account, serviceId);
 	}
 	
+	@PUT
+	@Path("/statusUp")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public int upStatus(ComApplicant applicant) throws Exception{
+		return applicantService.statusUpdate(applicant);
+	}
 	
+	@POST
+	@Path("/addApplicant")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public int addApplicant(ComApplicant applicant) throws Exception{
+		return applicantService.addApplicant(applicant.getServiceId(),applicant.getMemberNo());
+	}
 	
 }

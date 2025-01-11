@@ -36,6 +36,22 @@ public class ComApplicantServiceImpl implements ComApplicantService{
 			return comApplicantDao.selectAccountOtherById(account, serviceId);
 		}
 	}
+
+	@Override
+	public int addApplicant(Integer serviceId, Integer memberNo) throws Exception {
+		return comApplicantDao.addApplicant(serviceId, memberNo);
+	}
+
+	@Override
+	public int statusUpdate(ComApplicant applicant) throws Exception {
+		if (applicant.getReject() == 1){
+			return comApplicantDao.updateStatusById(applicant);
+		}else {
+			Integer upStatus = comApplicantDao.applicantAccountUpdate(applicant);
+			System.out.println(upStatus);
+			return comApplicantDao.updateAllStatus(applicant.getServiceId());
+		}
+	}
 	
 
 	
