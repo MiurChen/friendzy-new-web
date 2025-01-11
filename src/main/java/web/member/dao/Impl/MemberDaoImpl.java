@@ -103,6 +103,7 @@ public class MemberDaoImpl extends MemberDao {
 
 	@Override
 	public int updatePassword(Member member) {
+		System.out.println("updatePassword: "+member.getEmail());
 		String sql = "UPDATE member_info SET mpassword = ? WHERE email = ?";
 		try (Connection conn = ds.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(sql)
@@ -111,6 +112,7 @@ public class MemberDaoImpl extends MemberDao {
 				pstmt.setString(2, member.getEmail());
 				return pstmt.executeUpdate();
 			} catch (Exception e) {
+				System.out.println(e.getMessage());
 				e.printStackTrace();
 			}
 			
@@ -148,6 +150,21 @@ public class MemberDaoImpl extends MemberDao {
 			
 			return -1;
 	}
-
+	
+	@Override
+	public int updateIntroduction(Member member) {
+		String sql = "UPDATE member_info SET Introduction = ? WHERE email = ?";
+		try (Connection conn = ds.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql)
+			){
+				pstmt.setString(1, member.getIntroduction());
+				pstmt.setString(2, member.getEmail());
+				return pstmt.executeUpdate();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return -1;
+	}
 	
 }

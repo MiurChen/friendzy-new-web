@@ -16,4 +16,6 @@ public interface MemberService {
 	String saveNickname(Member member);
 	
 	String savePhone(Member member);
+	
+	String saveIntroduction(Member member);
 }

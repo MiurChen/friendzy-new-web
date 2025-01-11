@@ -14,10 +14,10 @@ import web.customer.Service.PostServiceImpl;
 import web.customer.bean.Service;
 
 @Path("/customer/selectedPostList")
-public class SelectedPostLostController {
+public class SelectedPostListController {
 	private PostService postService;
 	
-	public SelectedPostLostController() throws NamingException {
+	public SelectedPostListController() throws NamingException {
 		postService = new PostServiceImpl();
 	}
 	

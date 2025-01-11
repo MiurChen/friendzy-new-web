@@ -3,6 +3,7 @@ package web.chat.dao.Impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +34,35 @@ public class MessageDaoImpl extends MessageDao{
 	}
 
 	@Override
-	public int insert(Message item) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+	public int insert(Message message) throws Exception {
+		String sql = "INSERT INTO messages (room_no, sender_id, message, sent_time, receiver_id, sender_token, receiver_token) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+		try (Connection conn = ds.getConnection();
+			PreparedStatement pstms = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		){
+			pstms.setInt(1, message.getRoom_no());
+			pstms.setInt(2, message.getSender_id());
+			pstms.setString(3, message.getMessage());
+			pstms.setTimestamp(4, message.getSent_time());
+			pstms.setInt(5, message.getReceiver_id());
+			pstms.setString(6, message.getSender_token());
+			pstms.setString(7, message.getReceiver_token());
+			
+			int affectedRow = pstms.executeUpdate();
+			
+			if(affectedRow > 0) {
+				try(ResultSet generatedKeys = pstms.getGeneratedKeys()) {
+					if(generatedKeys.next()) {
+						message.setMessage_no(generatedKeys.getInt(1));
+						return message.getMessage_no();
+					}
+				} 
+			}
+			return 0;
+		} catch (Exception e) {
+			 e.printStackTrace();
+	            throw new Exception("Error inserting message.");
+		}
 	}
 
 	@Override
@@ -66,7 +93,13 @@ public class MessageDaoImpl extends MessageDao{
 			return messageList;
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new Exception("Error fetching all messages.");
 		}
+	}
+
+	@Override
+	public List<Message> selectMessagesByRoom(int roomNo) throws Exception {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

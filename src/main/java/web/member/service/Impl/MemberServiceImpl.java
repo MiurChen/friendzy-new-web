@@ -151,5 +151,19 @@ public class MemberServiceImpl implements MemberService{
 	        return "電話更新失敗";
 	    }	
 	 }
+
+	@Override
+	public String saveIntroduction(Member member) {
+		String introduction = member.getIntroduction();
+	    if (introduction != null && introduction.length() > 100) {
+	        return "自我介紹長度不得超過100個字元";
+	    }
+
+	    if (memberDao.updateIntroduction(member) > 0) {
+	        return null;
+	    } else {
+	        return "自我介紹更新失敗";
+	    }
+	}
 	
 }

@@ -47,24 +47,26 @@ public class blackListDaoImpl extends blackListDao{
 		}
 		return blackLists;
 	} 
-//	@Override
-//	public int deleteBy(String id) throws Exception {
-//		String sql = "delete blacklist where user_id = ? and blacklist_id = ?";
-//		BlackList blackList = new BlackList();
-//		
-//		try (
-//			Connection conn = ds.getConnection();
-//			PreparedStatement pstmt = conn.prepareStatement(sql);	
-//				){
-//			pstmt.setInt(1, blackList.getUser_id());
-//			pstmt.setInt(2, blackList.getBlacklist_id());
-//			pstmt.executeUpdate();
-//		} catch (Exception e) {
-//			
-//		}
-//		
-//		return -1;
-//	}
+	
+	
+	@Override
+	public int deleteBy(BlackList blackList) throws Exception {
+		String sql = "delete from blacklist where user_id = ? and blacklist_id = ?";
+		try (
+			Connection conn = ds.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql);	
+				){
+			pstmt.setInt(1, blackList.getUser_id());
+			pstmt.setInt(2, blackList.getBlacklist_id());
+			return pstmt.executeUpdate();
+		} catch (Exception e) {
+			
+		}
+		
+		return -1;
+	}
+	
+	
 	@Override
 	public int insert(BlackList item) throws Exception {
 		String sql = "insert into blacklist(user_id, blacklist_id, blackist_reason) values(?, ?, ?)";

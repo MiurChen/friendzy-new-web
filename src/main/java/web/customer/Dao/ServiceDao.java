@@ -42,4 +42,9 @@ public class ServiceDao implements dao<Service>{
 		return null;
 	}
 
+	public int updateDeclineStatus(Service service) throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
