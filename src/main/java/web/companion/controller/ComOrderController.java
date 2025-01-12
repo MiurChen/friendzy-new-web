@@ -51,10 +51,11 @@ public class ComOrderController{
 	}
 	//變更訂單狀態
 	@PUT
-	@Path("/statusUp")
+	@Path("/statusUpdate")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ComOrder update(ComOrder comOrder)throws Exception{
+		System.out.println("更新接收");
 		return orderListService.statusUpdate(comOrder);
 	}
 	//取消訂單 取消所有應徵者
@@ -67,6 +68,16 @@ public class ComOrderController{
 		return orderListService.cancelApply(applicant.getServiceId());
 //		return null;
 	} 
+	//評價
+	@PUT
+	@Path("/rate")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public int updateRate(ComOrder comOrder)throws Exception{
+		System.out.println("評價接收");
+		return orderListService.updateRate(comOrder);
+	} 
+	
 	
 	//刊登(新增【服務】&【訂單】)
 	

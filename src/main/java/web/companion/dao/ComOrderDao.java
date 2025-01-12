@@ -56,6 +56,16 @@ public class ComOrderDao implements dao<ComOrder> {
 		
 		return null;
 	}
+	
+	public int rateUpdateCompanionMe(ComOrder order) throws Exception{
+		
+		return -1;
+	}
+	
+	public int rateUpdateCompanionOther(ComOrder order) throws Exception{
+		
+		return -1;
+	}
 
 
 }

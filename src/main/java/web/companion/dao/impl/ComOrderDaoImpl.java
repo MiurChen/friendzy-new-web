@@ -136,7 +136,9 @@ public class ComOrderDaoImpl extends ComOrderDao {
 				+ "o.customer_rate as'customer_rate',"
 				+ "o.customer_rate_content as'customer_rate_content',"
 				+ "o.companion_rate as 'companion_rate',"
-				+ "o.companion_rate_content as'companion_rate_content'"
+				+ "o.companion_rate_content as'companion_rate_content',"
+				+ "o.order_price as'order_price',"
+				+ "s.poster_status as'poster_status'"
 				+ "from order_list o join service s join member_info m1 join member_info m2 on"
 				+ " s.service_id = o.service_idno and o.order_person = m1.member_no and o.order_poster = m2.member_no "
 				+ " where o.order_id = ?";
@@ -163,10 +165,12 @@ public class ComOrderDaoImpl extends ComOrderDao {
 					order.setEndTime(rs.getTimestamp("finished_time")); // 結束時間
 					order.setOrderStatus(rs.getInt("order_status")); // 訂單狀態
 					order.setServiceStatus(rs.getInt("service_status"));
-					order.setCusRate(rs.getString("customer_rate")); // 顧客評分
+					order.setCusRate(rs.getInt("customer_rate")); // 顧客評分
 					order.setCusRateContent(rs.getString("customer_rate_content")); // 顧客評價
-					order.setComRate(rs.getString("companion_rate")); // 陪伴者評分
+					order.setComRate(rs.getInt("companion_rate")); // 陪伴者評分
 					order.setComRateContent(rs.getString("companion_rate_content")); // 陪伴者評價
+					order.setOrderPrice(rs.getDouble("order_price"));
+					order.setPosterStatus(rs.getInt("poster_status"));
 					System.out.println("我刊登");
 					System.out.println(order);
 					return order;
@@ -201,7 +205,9 @@ public class ComOrderDaoImpl extends ComOrderDao {
 				+ "o.customer_rate as'customer_rate',"
 				+ "o.customer_rate_content as'customer_rate_content',"
 				+ "o.companion_rate as 'companion_rate',"
-				+ "o.companion_rate_content as'companion_rate_content'"
+				+ "o.companion_rate_content as'companion_rate_content',"
+				+ "o.order_price as'order_price',"
+				+ "s.poster_status as'poster_status'"
 				+ "from order_list o join service s join member_info m1 join member_info m2 on"
 				+ " s.service_id = o.service_idno and o.order_person = m1.member_no and o.order_poster = m2.member_no "
 				+ " where o.order_id = ?";
@@ -228,10 +234,12 @@ public class ComOrderDaoImpl extends ComOrderDao {
 					order.setEndTime(rs.getTimestamp("finished_time")); // 結束時間
 					order.setOrderStatus(rs.getInt("order_status")); // 訂單狀態
 					order.setServiceStatus(rs.getInt("service_status"));
-					order.setCusRate(rs.getString("customer_rate")); // 顧客評分
+					order.setCusRate(rs.getInt("customer_rate")); // 顧客評分
 					order.setCusRateContent(rs.getString("customer_rate_content")); // 顧客評價
-					order.setComRate(rs.getString("companion_rate")); // 陪伴者評分
+					order.setComRate(rs.getInt("companion_rate")); // 陪伴者評分
 					order.setComRateContent(rs.getString("companion_rate_content")); // 陪伴者評價
+					order.setOrderPrice(rs.getDouble("order_price"));
+					order.setPosterStatus(rs.getInt("poster_status"));
 					System.out.println("對方刊登");
 					System.out.println(order);
 					return order;
@@ -244,5 +252,38 @@ public class ComOrderDaoImpl extends ComOrderDao {
 		return null;
 	}
 	
+	//更改評價 我為刊登者
+	public int rateUpdateCompanionMe(ComOrder order) throws Exception{
+		String sql = "update order_list set customer_rate = ?,customer_rate_content = ? where order_id = ?; ";
+		try (
+			Connection connection = ds.getConnection();
+			PreparedStatement ps = connection.prepareStatement(sql);
+		){
+			ps.setInt(1, order.getCusRate());
+			ps.setString(2, order.getCusRateContent());
+			ps.setInt(3, order.getOrderId());
+			return ps.executeUpdate();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	//更改評價 對方為刊登者
+	public int rateUpdateCompanionOther(ComOrder order) throws Exception{
+		String sql = "update order_list set companion_rate = ?,companion_rate_content = ? where order_id = ?; ";
+		try (
+			Connection connection = ds.getConnection();
+			PreparedStatement ps = connection.prepareStatement(sql);
+		){
+			ps.setInt(1, order.getComRate());
+			ps.setString(2, order.getComRateContent());
+			ps.setInt(3, order.getOrderId());
+			return ps.executeUpdate();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
 
 }

@@ -160,8 +160,8 @@ public class ComPublishDaoImpl extends ComPublishDao{
 	//刊登新增服務資料
 	public ComPublish addService(ComPublish publish) throws Exception{
 		String insertSql = " insert into service(service_poster , service , servicr_detail , start_time ,"
-				+ " finished_time , sverice_charge , service_status , service_location , poster_status)"
-				+ " value(? , ? , ? , ? , ? , ? , ? , ? , ?);";
+				+ " finished_time , sverice_charge , service_status , service_location , poster_status,service_pic)"
+				+ " value(? , ? , ? , ? , ? , ? , ? , ? , ? , '');";
 		String selectSql =" select service_id , sverice_charge , service_poster , service"
 				+ " from service"
 				+ " where service_id = (select max(service_id) as 'serviceId' from service);";
@@ -199,8 +199,9 @@ public class ComPublishDaoImpl extends ComPublishDao{
 	
 	//刊登新增訂單資料
 	public int addOrder(ComPublish publish) throws Exception{
-		String sql = "insert into order_list(service_idno , order_price , order_status , order_poster , order_title)"
-				+ " value(? , ? , 0 , ? , ?);";
+		String sql = "insert into order_list(service_idno , order_price , order_status , order_poster , order_title,"
+				+ "companion_rate_content,customer_rate_content,customer_rate,companion_rate)"
+				+ " value(? , ? , 0 , ? , ? , '' , '' , 0 , 0);";
 			try (
 				Connection connection = ds.getConnection();
 				PreparedStatement ps = connection.prepareStatement(sql);

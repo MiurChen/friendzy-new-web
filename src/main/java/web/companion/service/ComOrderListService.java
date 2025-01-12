@@ -15,5 +15,7 @@ public interface ComOrderListService{
 		
 		String cancelApply(Integer serviceId)throws Exception;
 
+		int updateRate(ComOrder comOrder) throws Exception;
+
 	
 }
