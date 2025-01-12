@@ -304,7 +304,7 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 	}
 	//確認沒應徵過
 	public int selectApplicantById(Integer serviceId,Integer memberNo ) throws Exception{
-		System.out.println("預約"+serviceId);
+		System.out.println("預約過"+serviceId);
 		String sql = "select * from applicant where service_id = ? and applicant_account = ?;";
 		try (
 				Connection connection = ds.getConnection();

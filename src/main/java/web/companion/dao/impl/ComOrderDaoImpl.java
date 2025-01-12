@@ -30,7 +30,7 @@ public class ComOrderDaoImpl extends ComOrderDao {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
+	//更改訂單狀態
 	@Override
 	public int update(ComOrder item) throws SQLException {
 		String sql = "update order_list set order_status = ? where order_id = ?; ";
@@ -112,7 +112,7 @@ public class ComOrderDaoImpl extends ComOrderDao {
 		}
 		return null;
 	}
-	
+	//我為刊登者
 	@Override
 	public ComOrder selectPosterMeBy(Integer id) throws Exception {
 		System.out.println("111111111111");
@@ -182,7 +182,7 @@ public class ComOrderDaoImpl extends ComOrderDao {
 		}
 		return null;
 	}
-	
+	//對方為刊登者
 	@Override
 	public ComOrder selectPosterOtherBy(Integer id) throws Exception {
 		System.out.println("22222222222222");

@@ -13,7 +13,7 @@ public interface ComOrderListService{
 	
 		ComOrder statusUpdate(ComOrder orderSt) throws Exception;
 		
-		String cancelApply(Integer serviceId)throws Exception;
+		int cancelApply(Integer serviceId)throws Exception;
 
 		int updateRate(ComOrder comOrder) throws Exception;
 

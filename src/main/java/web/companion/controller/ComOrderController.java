@@ -64,7 +64,7 @@ public class ComOrderController{
 	@Path("/cancelApply")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String cancelApply(ComApplicant applicant)throws Exception{
+	public int cancelApply(ComApplicant applicant)throws Exception{
 		return orderListService.cancelApply(applicant.getServiceId());
 //		return null;
 	} 

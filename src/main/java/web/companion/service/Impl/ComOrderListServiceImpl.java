@@ -53,12 +53,12 @@ public class ComOrderListServiceImpl implements ComOrderListService {
 
 	// 取消訂單 更新應徵者的應徵狀態
 	@Override
-	public String cancelApply(Integer serviceId) throws Exception {
+	public int cancelApply(Integer serviceId) throws Exception {
 		if (comApplicantDao.updateAllStatus(serviceId) > 0) {
-			return serviceId.toString();
+			return serviceId;
 //			return "更改成功："+serviceId.toString()+"比資料受影響";
 		} else {
-			return null;
+			return -1;
 		}
 	}
 

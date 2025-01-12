@@ -33,7 +33,7 @@ public class ComPublishDaoImpl extends ComPublishDao{
 				+ "concat( sa.area_city,' ', sa.area_district) as'area'"
 				+ " from service s join member_info m join service_area sa"
 				+ " on s.service_poster = m.member_no and sa.area_no = s.service_location"
-				+ " where s.service_poster != ? and s.service_status = 1;";
+				+ " where s.service_poster != ? and s.service_status = 0;";
 		try (//service_status要改成0，現在用1只是0沒資料
 			Connection conn = ds.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(sql)		
