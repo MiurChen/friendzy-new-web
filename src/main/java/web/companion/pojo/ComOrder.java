@@ -30,6 +30,7 @@ public class ComOrder {//訂單
 	private String area;//服務地區-城市+區  SQL名字:area
 	
 	private Integer memberNo;//使用者編號
+	private Integer applyStatus;//應徵的狀態 0:未應徵 1:已應徵 SQL名字:apply_status
 
 	
 }

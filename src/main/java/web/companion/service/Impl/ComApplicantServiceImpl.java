@@ -22,12 +22,12 @@ public class ComApplicantServiceImpl implements ComApplicantService{
 //		comOrderDao = new ComOrderDaoImpl();
 		comApplicantDao = new ComApplicantDaoImpl();
 	}
-
+	//select所有應徵項目基本資訊
 	@Override
 	public List<ComApplicant> showAllApplocant(Integer memberNo) throws Exception {
 		return comApplicantDao.showAllApplicant(memberNo);
 	}
-
+	//select指定應徵項目內容
 	@Override
 	public ComApplicant showApplocantById(Integer meberNo , Integer account  , Integer serviceId) throws Exception {
 		if (account  == meberNo) {//我為應徵者
@@ -36,19 +36,26 @@ public class ComApplicantServiceImpl implements ComApplicantService{
 			return comApplicantDao.selectAccountOtherById(account, serviceId);
 		}
 	}
-
+	//新增應徵項目
 	@Override
 	public int addApplicant(Integer serviceId, Integer memberNo) throws Exception {
-		return comApplicantDao.addApplicant(serviceId, memberNo);
+		if (comApplicantDao.selectApplicantById(serviceId, memberNo) == 0) {
+			System.out.println("新增應徵者資料");
+			return comApplicantDao.addApplicant(serviceId, memberNo);
+		}else {
+			System.out.println("已有應徵者資料");
+			return -1;
+		}
 	}
-
+	//應徵狀態變更
 	@Override
 	public int statusUpdate(ComApplicant applicant) throws Exception {
-		if (applicant.getReject() == 1){
-			return comApplicantDao.updateStatusById(applicant);
-		}else {
-			Integer upStatus = comApplicantDao.applicantAccountUpdate(applicant);
-			System.out.println(upStatus);
+		if (applicant.getReject() == 1){//拒絕
+			return comApplicantDao.rejectStatus(applicant);
+		}else {//接受
+//			Integer upStatus = comApplicantDao.acceptStatusUpdate(applicant);
+//			System.out.println(upStatus);
+			comApplicantDao.acceptStatusUpdate(applicant);
 			return comApplicantDao.updateAllStatus(applicant.getServiceId());
 		}
 	}

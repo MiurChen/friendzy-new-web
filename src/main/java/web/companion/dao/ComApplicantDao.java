@@ -41,7 +41,7 @@ public class ComApplicantDao implements dao<ComApplicant> {
 	
 
 	//新加的↓
-	public int applicantAccountUpdate (ComApplicant applicant) throws Exception{
+	public int acceptStatusUpdate (ComApplicant applicant) throws Exception{
 		
 		return -1;
 	}
@@ -50,7 +50,7 @@ public class ComApplicantDao implements dao<ComApplicant> {
 		return -1;
 	}
 	
-	public int updateStatusById(ComApplicant applicant) throws Exception{
+	public int rejectStatus(ComApplicant applicant) throws Exception{
 		
 		return -1;
 	}
@@ -74,5 +74,11 @@ public class ComApplicantDao implements dao<ComApplicant> {
 		
 		return -1;
 	}
+	
+	public int selectApplicantById(Integer serviceId,Integer memberNo ) throws Exception{
+		
+		return -1;
+	}
+	
 	
 }

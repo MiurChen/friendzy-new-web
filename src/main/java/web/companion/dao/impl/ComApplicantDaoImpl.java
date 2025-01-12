@@ -58,16 +58,17 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 	
 	//更改特定應徵者的的結果為1
 	@Override
-	public int applicantAccountUpdate(ComApplicant applicant) throws Exception{
+	public int acceptStatusUpdate(ComApplicant applicant) throws Exception{
 		//應徵結果 0:未得標 1:已得標
-		String sql = "update applicant set application_result  = 1 where service_id = ? and applicant_account  = ?;";
+		String sql = "update applicant set application_result  = 1 where service_id = ? and applicant_account  = ?;"
+				+ "update service set service_status = 1 where service_id = ?;";
 		try (
 				Connection connection = ds.getConnection();
 				PreparedStatement ps = connection.prepareStatement(sql);
 			){
 				ps.setInt(1, applicant.getServiceId());
 				ps.setInt(2, applicant.getAccountId());
-
+				ps.setInt(3, applicant.getServiceId());
 				return ps.executeUpdate();
 			}catch (Exception e) {
 				e.printStackTrace();
@@ -91,9 +92,9 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 			}
 			return -1;
 	}
-	
+	//拒絕預約
 	@Override
-	public int updateStatusById(ComApplicant applicant) throws Exception{
+	public int rejectStatus(ComApplicant applicant) throws Exception{
 		//應徵狀態 0:未應徵 1:已應徵
 		String sql = "update applicant set apply_status = 1 where service_id = ? and applicant_account  = ?;";
 		try (
@@ -108,7 +109,7 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 			}
 			return -1;
 	}
-	
+	//所有應徵項目
 	@Override
 	public List<ComApplicant> showAllApplicant(Integer memberId)throws Exception{
 		List<ComApplicant> lists = new ArrayList<ComApplicant>();
@@ -157,7 +158,7 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 			return null;
 	}
 	
-	//我為刊登者
+	//應徵項目詳細之訊，我為刊登者
 	@Override
 	public ComApplicant selectAccountMyById(Integer account ,Integer serviceId)throws Exception{
 		String sql = "select o.order_id as'order_id',"
@@ -219,7 +220,7 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 		return null;
 	}
 	
-	//對方為刊登者
+	//應徵項目詳細之訊，對方為刊登者
 	@Override
 	public ComApplicant selectAccountOtherById(Integer account ,Integer serviceId)throws Exception{
 		String sql = "select o.order_id as'order_id',"
@@ -280,9 +281,9 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 		}
 		return null;
 	}
-	
+	//預約,新增應徵者資料
 	public int addApplicant(Integer serviceId,Integer memberNo ) throws Exception{
-		
+		System.out.println("預約"+serviceId);
 		String sql = " insert into applicant("
 				+ " service_id,applicant_account,application_date,apply_status,application_result)"
 				+ " value(? , ? , ? , 0 , 0);";
@@ -295,6 +296,22 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 				ps.setInt(1, serviceId);
 				ps.setInt(2, memberNo);
 				ps.setTimestamp(3, timestamp);
+				return ps.executeUpdate();
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			return -1;
+	}
+	//確認沒應徵過
+	public int selectApplicantById(Integer serviceId,Integer memberNo ) throws Exception{
+		System.out.println("預約"+serviceId);
+		String sql = "select * from applicant where service_id = ? and applicant_account = ?;";
+		try (
+				Connection connection = ds.getConnection();
+				PreparedStatement ps = connection.prepareStatement(sql);
+			){
+				ps.setInt(1, serviceId);
+				ps.setInt(2, memberNo);
 				return ps.executeUpdate();
 			}catch (Exception e) {
 				e.printStackTrace();

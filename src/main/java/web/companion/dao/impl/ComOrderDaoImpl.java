@@ -185,6 +185,7 @@ public class ComOrderDaoImpl extends ComOrderDao {
 	
 	@Override
 	public ComOrder selectPosterOtherBy(Integer id) throws Exception {
+		System.out.println("22222222222222");
 		String sql = "select o.order_id as 'order_id',"
 				+ "s.service_id as'service_id',"
 				//m1為購買人person m2為刊登者poster 

@@ -40,21 +40,21 @@ public class ComApplicantController{
 		System.out.println(account);
 		return applicantService.showApplocantById(meberNo, account, serviceId);
 	}
-	
+	//狀態變更
 	@PUT
-	@Path("/statusUp")
+	@Path("/statusUpdate")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public int upStatus(ComApplicant applicant) throws Exception{
 		return applicantService.statusUpdate(applicant);
 	}
-	
+	//刊登
 	@POST
 	@Path("/addApplicant")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public int addApplicant(ComApplicant applicant) throws Exception{
-		return applicantService.addApplicant(applicant.getServiceId(),applicant.getMemberNo());
+	public int addApplicant(Integer serviceId,Integer MemberNo) throws Exception{
+		return applicantService.addApplicant(serviceId,MemberNo);
 	}
 	
 }
