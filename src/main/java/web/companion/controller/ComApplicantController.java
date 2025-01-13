@@ -53,8 +53,8 @@ public class ComApplicantController{
 	@Path("/addApplicant")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public int addApplicant(Integer serviceId,Integer MemberNo) throws Exception{
-		return applicantService.addApplicant(serviceId,MemberNo);
+	public int addApplicant(ComApplicant applicant) throws Exception{
+		return applicantService.addApplicant(applicant.getServiceId(),applicant.getMemberNo());
 	}
 	
 }

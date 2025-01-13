@@ -97,7 +97,7 @@ public class OrderListDaoImpl extends OrderListDao {
 	@Override
 	public int insertService(Service service) throws Exception {
 		String insertOrderList = "INSERT INTO order_list(order_poster, order_price, order_title,  service_idno) VALUES (?, ?, ?, ?)";
-		String insertPost = "INSERT INTO service(service_poster, sverice_charge, service, servicr_detail, start_time, finished_time,  poster_status, service_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		String insertPost = "INSERT INTO service(service_poster, sverice_charge, service, servicr_detail, start_time, finished_time,  poster_status, service_status, service_location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'A001')";
 
 		try (Connection conn = ds.getConnection()) {
 			conn.setAutoCommit(false); // 關閉自動提交，啟用交易

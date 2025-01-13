@@ -29,10 +29,12 @@ public class ComPublishDaoImpl extends ComPublishDao{
 				+ "s.service as'service',"
 				+ "s.service_poster as'poster',"
 				+ "m.member_name as'poster_name',"
-				+ "s.start_time as'start_time',"
-				+ "concat( sa.area_city,' ', sa.area_district) as'area'"
-				+ " from service s join member_info m join service_area sa"
-				+ " on s.service_poster = m.member_no and sa.area_no = s.service_location"
+				+ "s.start_time as'start_time'"
+//				+ "s.start_time as'start_time',"
+//				+ "concat( sa.area_city,' ', sa.area_district) as'area'"
+//				+ " from service s join member_info m join service_area sa"//有地區
+				+ " from service s join member_info m "
+				+ " on s.service_poster = m.member_no"
 				+ " where s.service_poster != ? and s.service_status = 0;";
 		try (//service_status要改成0，現在用1只是0沒資料
 			Connection conn = ds.getConnection();
@@ -49,7 +51,7 @@ public class ComPublishDaoImpl extends ComPublishDao{
 					lists.setPoster(rs.getInt("poster"));
 					lists.setPosterName(rs.getString("poster_name"));
 					lists.setStartTime(rs.getTimestamp("start_time"));
-					lists.setArea(rs.getString("area"));
+//					lists.setArea(rs.getString("area"));
 					publishList.add(lists);
 				}
 				return publishList;
