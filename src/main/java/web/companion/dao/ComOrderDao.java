@@ -6,6 +6,7 @@ import java.util.List;
 import core.dao.dao;
 import web.companion.pojo.ComApplicant;
 import web.companion.pojo.ComOrder;
+import web.member.pojo.Member;
 
 public class ComOrderDao implements dao<ComOrder> {
 
@@ -47,6 +48,11 @@ public class ComOrderDao implements dao<ComOrder> {
 		return null;
 	}
 	
+	public List<Member> selectAllName() throws Exception {
+
+		return null;
+	}
+	
 	public ComOrder selectPosterMeBy(Integer id) throws Exception{
 		
 		return null;
@@ -66,6 +72,7 @@ public class ComOrderDao implements dao<ComOrder> {
 		
 		return -1;
 	}
-
+	
+	
 
 }

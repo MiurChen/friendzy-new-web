@@ -52,10 +52,12 @@ public class ComApplicantServiceImpl implements ComApplicantService{
 	public int statusUpdate(ComApplicant applicant) throws Exception {
 		if (applicant.getReject() == 1){//拒絕
 			return comApplicantDao.rejectStatus(applicant);
-		}else {//接受
+		}else if(applicant.getReject() == 0){//接受
 //			Integer upStatus = comApplicantDao.acceptStatusUpdate(applicant);
 //			System.out.println(upStatus);
 			comApplicantDao.acceptStatusUpdate(applicant);
+			return comApplicantDao.updateAllStatus(applicant.getServiceId());
+		}else {
 			return comApplicantDao.updateAllStatus(applicant.getServiceId());
 		}
 	}

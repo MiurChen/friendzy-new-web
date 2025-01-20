@@ -17,6 +17,7 @@ import web.companion.dao.ComOrderDao;
 import web.companion.pojo.ComApplicant;
 import web.companion.pojo.ComOrder;
 import web.customer.bean.OrderList;
+import web.member.pojo.Member;
 
 public class ComOrderDaoImpl extends ComOrderDao {
 	private DataSource ds;
@@ -65,24 +66,22 @@ public class ComOrderDaoImpl extends ComOrderDao {
 		return null;
 	}
 
-	//取所有自己
+	//取所有自己的訂單
 	@Override
 	public List<ComOrder> showAllOrder(Integer meberNo) throws Exception {
 		List<ComOrder> orderLists = new ArrayList<ComOrder>();
 		String sql = "select o.order_id as 'order_id',"
 				+ "s.service as'service',"
 				+ "o.order_person as 'order_person',"
-				+ "m1.member_name as'Person_name',"
 				+ "o.order_poster as 'order_poster',"
-				+ "m2.member_name as'poster_name',"
 				+ "o.order_status as 'order_status',"
 				+ "s.service_status as'service_status',"
 				+ "s.start_time as'start_time',"
 				+ "concat( sa.area_city,' ', sa.area_district) as'area'"
-				+ " from order_list o join service s join member_info m1 join member_info m2 join service_area sa"
-				+ " on s.service_id = o.service_idno and o.order_person = m1.member_no and"
-				+ " o.order_poster = m2.member_no and s.service_location = sa.area_no"
-				+ " where m1.member_no = ? or m2.member_no = ?;";
+				+ " from order_list o join service s join service_area sa"
+				+ " on s.service_id = o.service_idno and s.service_location = sa.area_no"
+				+ " where o.order_poster = ? or o.order_person = ?"
+				+ " order by order_id;";
 		try (
 			Connection conn = ds.getConnection();
 			PreparedStatement pstmt = conn.prepareStatement(sql)
@@ -96,9 +95,7 @@ public class ComOrderDaoImpl extends ComOrderDao {
 					orderList.setOrderId(rs.getInt("order_id"));
 					orderList.setService(rs.getString("service"));
 					orderList.setOrderPerson(rs.getInt("order_person"));
-					orderList.setOrderPersonName(rs.getString("Person_name"));
 					orderList.setOrderPoster(rs.getInt("order_poster"));
-					orderList.setOrderPosterName(rs.getString("poster_name"));
 					orderList.setOrderStatus(rs.getInt("order_status"));
 					orderList.setServiceStatus(rs.getInt("service_status"));
 					orderList.setStartTime(rs.getTimestamp("start_time"));
@@ -106,6 +103,29 @@ public class ComOrderDaoImpl extends ComOrderDao {
 					orderLists.add(orderList);
 				}
 				return orderLists;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	//取得所有會員編號、名字
+	public List<Member> selectAllName() throws Exception {
+		List<Member> lists = new ArrayList<Member>();
+		String sql = "SELECT member_no,member_name FROM member_info;";
+		try (
+				Connection conn = ds.getConnection();
+				PreparedStatement pstmt = conn.prepareStatement(sql)
+			) {
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					Member list = new Member();
+					//需要 訂單編號、標題、訂購人、訂購人ID、訂單狀態、開始時間
+					list.setMember_no(rs.getInt("member_no"));
+					list.setMember_name(rs.getString("member_name"));
+					lists.add(list);
+				}
+				return lists;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -120,13 +140,10 @@ public class ComOrderDaoImpl extends ComOrderDao {
 				+ "s.service_id as'service_id',"
 				//m1為購買人person m2為刊登者poster 
 				+ "o.order_person as'their_id',"
-				+ "m1.member_name as'their_name',"
 				//對方↑
 				+ "o.order_poster as'order_poster',"
-				+ "m2.member_name as'poster_name',"
 				//刊登人Poster↑
 				+ "o.order_person as'order_person',"
-				+ "m1.member_name as'person_name',"
 				//購買人person↑
 				+ "s.service as'service',"
 				+ "s.start_time as'start_time',"
@@ -139,8 +156,7 @@ public class ComOrderDaoImpl extends ComOrderDao {
 				+ "o.companion_rate_content as'companion_rate_content',"
 				+ "o.order_price as'order_price',"
 				+ "s.poster_status as'poster_status'"
-				+ "from order_list o join service s join member_info m1 join member_info m2 on"
-				+ " s.service_id = o.service_idno and o.order_person = m1.member_no and o.order_poster = m2.member_no "
+				+ "from order_list o join service s on s.service_id = o.service_idno"
 				+ " where o.order_id = ?";
 		try (
 			Connection conn = ds.getConnection();
@@ -155,11 +171,8 @@ public class ComOrderDaoImpl extends ComOrderDao {
 					order.setOrderId(rs.getInt("order_id"));//訂單編號
 					order.setServiceId(rs.getInt("service_id"));//服務編號
 					order.setTheirId(rs.getInt("their_id"));//對方名字、購買人名字
-					order.setTheirName(rs.getString("their_name"));//對方ID、購買人ID
-					order.setOrderPosterName(rs.getString("poster_name")); // 刊登人
 					order.setOrderPoster(rs.getInt("order_poster")); // 刊登人編號
 					order.setOrderPerson(rs.getInt("order_person"));//訂購人ID
-					order.setOrderPersonName(rs.getString("person_name"));//訂購人名字
 					order.setService(rs.getString("service")); // 標題
 					order.setStartTime(rs.getTimestamp("start_time")); // 開始時間
 					order.setEndTime(rs.getTimestamp("finished_time")); // 結束時間
@@ -190,13 +203,10 @@ public class ComOrderDaoImpl extends ComOrderDao {
 				+ "s.service_id as'service_id',"
 				//m1為購買人person m2為刊登者poster 
 				+ "o.order_poster as'their_id',"
-				+ "m2.member_name as'their_name',"
 				//對方↑
 				+ "o.order_poster as'order_poster',"
-				+ "m2.member_name as'poster_name',"
 				//刊登人Poster↑
 				+ "o.order_person as'order_person',"
-				+ "m1.member_name as'person_name',"
 				//購買人person↑
 				+ "s.service as'service',"
 				+ "s.start_time as'start_time',"
@@ -209,8 +219,7 @@ public class ComOrderDaoImpl extends ComOrderDao {
 				+ "o.companion_rate_content as'companion_rate_content',"
 				+ "o.order_price as'order_price',"
 				+ "s.poster_status as'poster_status'"
-				+ "from order_list o join service s join member_info m1 join member_info m2 on"
-				+ " s.service_id = o.service_idno and o.order_person = m1.member_no and o.order_poster = m2.member_no "
+				+ "from order_list o join service s on s.service_id = o.service_idno"
 				+ " where o.order_id = ?";
 		try (
 			Connection conn = ds.getConnection();
@@ -225,11 +234,8 @@ public class ComOrderDaoImpl extends ComOrderDao {
 					order.setOrderId(rs.getInt("order_id"));//訂單編號
 					order.setServiceId(rs.getInt("service_id"));//服務編號
 					order.setTheirId(rs.getInt("their_id"));//對方名字、刊登人名字
-					order.setTheirName(rs.getString("their_name"));//對方ID、刊登人ID
-					order.setOrderPosterName(rs.getString("poster_name")); // 刊登人
 					order.setOrderPoster(rs.getInt("order_poster")); // 刊登人編號
 					order.setOrderPerson(rs.getInt("order_person"));//訂購人ID
-					order.setOrderPersonName(rs.getString("person_name"));//訂購人名字
 					order.setService(rs.getString("service")); // 標題
 					order.setStartTime(rs.getTimestamp("start_time")); // 開始時間
 					order.setEndTime(rs.getTimestamp("finished_time")); // 結束時間

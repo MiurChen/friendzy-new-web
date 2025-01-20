@@ -1,5 +1,6 @@
 package web.companion.service.Impl;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.naming.NamingException;
@@ -12,6 +13,7 @@ import web.companion.dao.impl.ComOrderDaoImpl;
 import web.companion.pojo.ComApplicant;
 import web.companion.pojo.ComOrder;
 import web.companion.service.ComOrderListService;
+import web.member.pojo.Member;
 
 public class ComOrderListServiceImpl implements ComOrderListService {
 	private ComOrderDao comOrderDao;
@@ -25,7 +27,26 @@ public class ComOrderListServiceImpl implements ComOrderListService {
 	// 取得所有訂單的基本資訊
 	@Override
 	public List<ComOrder> showAllOrder(Integer meberNo) throws Exception {
-		return comOrderDao.showAllOrder(meberNo);
+		List<ComOrder> orderList = comOrderDao.showAllOrder(meberNo);
+		List<Member> memberList = comOrderDao.selectAllName();
+		for (ComOrder order:orderList) {
+			for(Member member:memberList){
+				if (order.getOrderPoster() == member.getMember_no()) {
+					order.setOrderPosterName(member.getMember_name());
+				}
+				if (order.getOrderPerson() == member.getMember_no()) {
+					order.setOrderPersonName(member.getMember_name());
+				}
+			}
+			if (order.getOrderPoster() == 0) {
+				order.setOrderPosterName("");
+			}
+			if (order.getOrderPerson() == 0) {
+				order.setOrderPersonName("");
+			}
+		}
+		System.out.println("order："+orderList);
+		return orderList;
 	}
 
 	// 取得特定ID的訂單詳細資訊
@@ -33,10 +54,54 @@ public class ComOrderListServiceImpl implements ComOrderListService {
 	public ComOrder showMyOrder(Integer meberNo, Integer poster, Integer orderId) throws Exception {
 		if (poster == meberNo) {// 我為刊登者
 			System.out.println("posterMe");
-			return comOrderDao.selectPosterMeBy(orderId);
+			ComOrder order = comOrderDao.selectPosterMeBy(orderId);
+			List<Member> memberList = comOrderDao.selectAllName();
+			for(Member member:memberList){
+				if (order.getOrderPoster() == member.getMember_no()) {
+					order.setOrderPosterName(member.getMember_name());
+				}
+				if (order.getOrderPerson() == member.getMember_no()) {
+					order.setOrderPersonName(member.getMember_name());
+				}
+				if (order.getTheirId() == member.getMember_no()) {
+					order.setTheirName(member.getMember_name());
+				}
+			}
+			if (order.getOrderPoster() == 0) {
+				order.setOrderPosterName("");
+			}
+			if (order.getOrderPerson() == 0) {
+				order.setOrderPersonName("");
+			}
+			if (order.getTheirId() == 0) {
+				order.setTheirName("");
+			}
+			return order;
 		} else {// 對方為刊登者
 			System.out.println("posterOther");
-			return comOrderDao.selectPosterOtherBy(orderId);
+			ComOrder order = comOrderDao.selectPosterOtherBy(orderId);
+			List<Member> memberList = comOrderDao.selectAllName();
+			for(Member member:memberList){
+				if (order.getOrderPoster() == member.getMember_no()) {
+					order.setOrderPosterName(member.getMember_name());
+				}
+				if (order.getOrderPerson() == member.getMember_no()) {
+					order.setOrderPersonName(member.getMember_name());
+				}
+				if (order.getTheirId() == member.getMember_no()) {
+					order.setTheirName(member.getMember_name());
+				}
+			}
+			if (order.getOrderPoster() == 0) {
+				order.setOrderPosterName("");
+			}
+			if (order.getOrderPerson() == 0) {
+				order.setOrderPersonName("");
+			}
+			if (order.getTheirId() == 0) {
+				order.setTheirName("");
+			}
+			return order;
 		}
 	}
 
