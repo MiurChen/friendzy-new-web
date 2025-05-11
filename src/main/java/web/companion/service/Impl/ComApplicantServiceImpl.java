@@ -56,9 +56,13 @@ public class ComApplicantServiceImpl implements ComApplicantService{
 //			Integer upStatus = comApplicantDao.acceptStatusUpdate(applicant);
 //			System.out.println(upStatus);
 			comApplicantDao.acceptStatusUpdate(applicant);
-			return comApplicantDao.updateAllStatus(applicant.getServiceId());
+			comApplicantDao.serviceStatusUpdate(applicant);
+			comApplicantDao.orderPersonUpdate(applicant);
+			comApplicantDao.orderStatusUpdate(applicant);
+			comApplicantDao.updateAllStatus(applicant.getServiceId());
+			return 1;
 		}else {
-			return comApplicantDao.updateAllStatus(applicant.getServiceId());
+			return -1;
 		}
 	}
 	

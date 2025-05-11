@@ -60,21 +60,65 @@ public class ComApplicantDaoImpl extends ComApplicantDao {
 	@Override
 	public int acceptStatusUpdate(ComApplicant applicant) throws Exception{
 		//應徵結果 0:未得標 1:已得標
-		String sql = "update applicant set application_result  = 1 where service_id = ? and applicant_account  = ?;"
-				+ "update service set service_status = 1 where service_id = ?;";
+		String sql = "update applicant set application_result  = 1 where service_id = ? and applicant_account  = ?;";
 		try (
 				Connection connection = ds.getConnection();
 				PreparedStatement ps = connection.prepareStatement(sql);
 			){
 				ps.setInt(1, applicant.getServiceId());
 				ps.setInt(2, applicant.getAccountId());
-				ps.setInt(3, applicant.getServiceId());
 				return ps.executeUpdate();
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
 			return -1;
 	}
+	
+	@Override
+	public int serviceStatusUpdate(ComApplicant applicant) throws Exception{
+		String sql ="update service set service_status = 1 where service_id = ?;";
+		try (
+				Connection connection = ds.getConnection();
+				PreparedStatement ps = connection.prepareStatement(sql);
+			){
+				ps.setInt(1, applicant.getServiceId());
+				return ps.executeUpdate();
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			return -1;
+	}
+	
+	@Override
+	public int  orderPersonUpdate(ComApplicant applicant) throws Exception{
+	String sql ="update order_list set order_person = ? where service_idno = ?;";
+	try (
+			Connection connection = ds.getConnection();
+			PreparedStatement ps = connection.prepareStatement(sql);
+		){
+			ps.setInt(1, applicant.getAccountId());
+			ps.setInt(2, applicant.getServiceId());
+			return ps.executeUpdate();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	@Override
+	public int orderStatusUpdate(ComApplicant applicant) throws Exception{
+		String sql ="update order_list set order_status = 1 where service_idno = ?;";
+		try (
+				Connection connection = ds.getConnection();
+				PreparedStatement ps = connection.prepareStatement(sql);
+			){
+				ps.setInt(1, applicant.getServiceId());
+				return ps.executeUpdate();
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			return -1;
+		}
 	
 	//更改應徵table的應徵狀態為1
 	@Override

@@ -45,6 +45,23 @@ public class ComApplicantDao implements dao<ComApplicant> {
 		
 		return -1;
 	}
+	
+	public int serviceStatusUpdate(ComApplicant applicant) throws Exception{
+		
+		return -1;
+	}
+	
+	public int orderPersonUpdate(ComApplicant applicant) throws Exception{
+		
+		return -1;
+	}
+
+	public int orderStatusUpdate(ComApplicant applicant) throws Exception{
+		
+		return -1;
+	}
+
+	
 	public int updateAllStatus(Integer serviceId) throws Exception{
 		
 		return -1;
